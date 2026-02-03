@@ -1,36 +1,25 @@
-import {
-  CreditCardIcon,
-  LogOutIcon,
-  SettingsIcon,
-  UserIcon,
-} from "lucide-react";
+import { CreditCardIcon, LogOutIcon, SettingsIcon, UserIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+  DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel,
+  DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 
 export function UserAction() {
   const router = useRouter();
   const RenderUserInfo = () => {
     return (
       <>
-        <Avatar>
+        <Avatar className="h-8 w-8 rounded-lg">
           <AvatarImage src="https://github.com/shadcn.png" alt="user" />
-          <AvatarFallback>SV</AvatarFallback>
+          <AvatarFallback className="rounded-lg">SV</AvatarFallback>
         </Avatar>
         <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="truncate font-semibold">Vishal Sannake</span>
-          <span className="truncate text-xs">
+          <span className="truncate font-semibold text-foreground">Vishal Sannake</span>
+          <span className="truncate text-xs text-muted-foreground">
             vishal.sannake@infraplan.co.in
           </span>
         </div>
@@ -41,17 +30,17 @@ export function UserAction() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer">
+        <Avatar className="cursor-pointer h-8 w-8 rounded-lg border border-border">
           <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>SV</AvatarFallback>
+          <AvatarFallback className="rounded-lg">SV</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        align="start"
+        align="end"
         className={cn(
-          "w-[--radix-dropdown-menu-trigger-width] min-w-56 mr-2",
-          "text-sm font-medium text-slate-600",
+          "w-56",
+          "text-sm font-medium text-muted-foreground"
         )}
       >
         <DropdownMenuLabel className="p-0 font-normal">
@@ -63,18 +52,24 @@ export function UserAction() {
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push("/settings/profile")}>
-            <UserIcon />
+          <DropdownMenuItem
+            onClick={() => router.push("/settings/profile")}
+            className="cursor-pointer"
+          >
+            <UserIcon className="mr-2 h-4 w-4" />
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/subscription")}>
-            <CreditCardIcon />
+          <DropdownMenuItem
+            onClick={() => router.push("/subscription")}
+            className="cursor-pointer"
+          >
+            <CreditCardIcon className="mr-2 h-4 w-4" />
             Billing
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <SettingsIcon />
+          <DropdownMenuItem className="cursor-pointer">
+            <SettingsIcon className="mr-2 h-4 w-4" />
             Settings
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
@@ -84,10 +79,10 @@ export function UserAction() {
 
         <DropdownMenuGroup>
           <DropdownMenuItem
-            className="hover:text-destructive!"
+            className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
             onClick={() => router.push("/auth/sign-in")}
           >
-            <LogOutIcon className="hover:text-destructive!" />
+            <LogOutIcon className="mr-2 h-4 w-4 text-destructive" />
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>

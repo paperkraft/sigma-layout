@@ -2,7 +2,10 @@
 
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
+import { Button } from "@/components/ui/button";
 import { UserAction } from './app-user-action';
 
 interface HeaderProps {
@@ -16,31 +19,31 @@ export const Header = ({
   projectName,
   description,
 }: HeaderProps) => {
-
+  const { setTheme, theme } = useTheme();
   const route = useRouter();
   const handleBack = () => route.replace("/projects");
   const handleDashboard = () => route.replace("/dashboard");
 
   return (
-    <header className="h-14 w-full bg-background border-b border-slate-200 flex items-center justify-between px-3 shrink-0">
+    <header className="h-14 w-full bg-background border-b border-border flex items-center justify-between px-3 shrink-0 transition-colors duration-300">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <div className="size-8 bg-primary rounded flex items-center justify-center text-white font-bold text-lg">
+          <div className="size-8 bg-primary rounded flex items-center justify-center text-primary-foreground font-bold text-lg">
             S
           </div>
 
           {!isWorkbench && (
-            <span className="font-bold text-base text-slate-900 leading-tight">
+            <span className="font-bold text-base text-foreground leading-tight">
               Sigma ToolBox
             </span>
           )}
 
           {isWorkbench && (
             <div className="flex flex-col">
-              <span className="text-xs font-bold text-slate-900 leading-tight truncate max-w-48">
+              <span className="text-xs font-bold text-foreground leading-tight truncate max-w-48">
                 {projectName}
               </span>
-              <span className="text-[10px] text-slate-400 font-medium truncate max-w-48">
+              <span className="text-[10px] text-muted-foreground font-medium truncate max-w-48">
                 {description}
               </span>
             </div>
@@ -49,16 +52,16 @@ export const Header = ({
 
         {isWorkbench && (
           <>
-            <div className="h-4 w-px bg-slate-200 mx-2" />
-            <nav className="flex items-center gap-4 text-xs font-medium text-slate-500">
+            <div className="h-4 w-px bg-border mx-2" />
+            <nav className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
               <span
-                className="hover:text-slate-800 cursor-pointer transition-colors"
+                className="hover:text-foreground cursor-pointer transition-colors"
                 onClick={() => handleDashboard()}
               >
                 Dashboard
               </span>
               <span
-                className="hover:text-slate-800 cursor-pointer transition-colors"
+                className="hover:text-foreground cursor-pointer transition-colors"
                 onClick={() => handleBack()}
               >
                 Projects
@@ -72,7 +75,16 @@ export const Header = ({
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="h-4 w-px bg-slate-200" />
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+        >
+          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+        <div className="h-4 w-px bg-border" />
         <UserAction />
       </div>
     </header>

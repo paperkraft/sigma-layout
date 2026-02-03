@@ -12,8 +12,8 @@ export const Placeholder = ({ title, description, children }: PageProps) => {
             {/* HEADER */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
-                    <p className="text-slate-500 text-sm mt-1">{description}</p>
+                    <h1 className="text-2xl font-bold text-foreground">{title}</h1>
+                    <p className="text-muted-foreground text-sm mt-1">{description}</p>
                 </div>
             </div>
 

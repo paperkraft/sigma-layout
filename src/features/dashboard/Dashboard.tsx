@@ -52,8 +52,8 @@ export default function Dashboard() {
          {/* 1. HEADER & ACTIONS */}
          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-               <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-               <p className="text-slate-500 text-sm mt-1">Welcome back, Vishal</p>
+               <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+               <p className="text-muted-foreground text-sm mt-1">Welcome back, Vishal</p>
             </div>
             <Button>
                <Plus size={16} className="mr-2" /> New Project
@@ -67,17 +67,17 @@ export default function Dashboard() {
 
                {/* Quick Starters */}
                <div className='hidden'>
-                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-4 flex items-center gap-2">
+                  <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-4 flex items-center gap-2">
                      <Zap size={14} /> Quick Start
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                      {TEMPLATES.map((t) => (
-                        <button key={t.id} className="bg-white p-4 rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all text-left group">
-                           <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-3 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <button key={t.id} className="bg-card p-4 rounded-xl border border-border hover:border-primary hover:shadow-md transition-all text-left group">
+                           <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                               <t.icon size={16} />
                            </div>
-                           <div className="font-semibold text-sm text-slate-900">{t.name}</div>
-                           <div className="text-xs text-slate-500 mt-1">{t.desc}</div>
+                           <div className="font-semibold text-sm text-foreground">{t.name}</div>
+                           <div className="text-xs text-muted-foreground mt-1">{t.desc}</div>
                         </button>
                      ))}
                   </div>
@@ -86,10 +86,10 @@ export default function Dashboard() {
                {/* Recent Projects */}
                <div>
                   <div className="flex items-center justify-between mb-4">
-                     <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wide flex items-center gap-2">
+                     <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                         <Clock size={14} /> Recent Projects
                      </h3>
-                     <Link href="/projects" className="text-xs font-medium text-blue-600 hover:underline flex items-center">
+                     <Link href="/projects" className="text-xs font-medium text-primary hover:underline flex items-center">
                         View All <ArrowRight size={12} className="ml-1" />
                      </Link>
                   </div>
@@ -100,11 +100,11 @@ export default function Dashboard() {
                      ))}
 
                      {/* Create New Card Placeholder */}
-                     <button className="flex flex-col items-center justify-center gap-3 bg-slate-100/50 border-2 border-dashed border-slate-300 rounded-xl min-h-50 hover:bg-slate-100 hover:border-slate-400 transition-colors">
-                        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">
+                     <button className="flex flex-col items-center justify-center gap-3 bg-muted/30 border-2 border-dashed border-border rounded-xl min-h-50 hover:bg-muted/50 hover:border-muted-foreground/50 transition-colors group">
+                        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground group-hover:bg-background group-hover:text-primary transition-colors">
                            <Plus size={20} />
                         </div>
-                        <span className="text-sm font-medium text-slate-500">Create New Project</span>
+                        <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground">Create New Project</span>
                      </button>
                   </div>
                </div>
@@ -114,10 +114,10 @@ export default function Dashboard() {
             <div className="space-y-6">
 
                {/* Usage Widget */}
-               <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+               <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
                   <div className="flex items-center justify-between mb-4">
-                     <h3 className="text-sm font-bold text-slate-900">Usage Quota</h3>
-                     <span className="text-[10px] font-medium bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">PRO PLAN</span>
+                     <h3 className="text-sm font-bold text-card-foreground">Usage Quota</h3>
+                     <span className="text-[10px] font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-full border border-border">PRO PLAN</span>
                   </div>
 
                   <div className="space-y-5">
@@ -126,27 +126,27 @@ export default function Dashboard() {
                         label="Core Hours"
                         used={450}
                         total={1000}
-                        color="bg-blue-600"
+                        color="bg-blue-600 dark:bg-blue-500"
                      />
                      <QuotaItem
                         icon={<HardDrive size={14} />}
                         label="Cloud Storage (GB)"
                         used={82}
                         total={100}
-                        color="bg-purple-600"
+                        color="bg-purple-600 dark:bg-purple-500"
                         warning
                      />
                   </div>
-                  <div className="mt-5 pt-4 border-t border-slate-100">
-                     <Link href="/subscription" className="text-xs font-medium text-slate-500 hover:text-blue-600 flex items-center justify-center">
+                  <div className="mt-5 pt-4 border-t border-border">
+                     <Link href="/subscription" className="text-xs font-medium text-muted-foreground hover:text-primary flex items-center justify-center transition-colors">
                         Manage Subscription
                      </Link>
                   </div>
                </div>
 
                {/* Activity Feed */}
-               <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-                  <h3 className="text-sm font-bold text-slate-900 mb-4">Latest Activity</h3>
+               <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+                  <h3 className="text-sm font-bold text-card-foreground mb-4">Latest Activity</h3>
                   <div className="space-y-4">
                      {ACTIVITY_FEED.map((item) => (
                         <div key={item.id} className="flex gap-3 items-start">
@@ -156,8 +156,8 @@ export default function Dashboard() {
                                  item.type === 'warning' ? "bg-amber-500" : "bg-blue-500"
                            )} />
                            <div>
-                              <p className="text-xs text-slate-700 leading-snug">{item.text}</p>
-                              <p className="text-[10px] text-slate-400 mt-1">{item.time}</p>
+                              <p className="text-xs text-foreground/80 leading-snug">{item.text}</p>
+                              <p className="text-[10px] text-muted-foreground mt-1">{item.time}</p>
                            </div>
                         </div>
                      ))}

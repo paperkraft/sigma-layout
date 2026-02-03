@@ -29,7 +29,7 @@ export const FormSelect = ({
     {label && (
       <label
         htmlFor={id ?? label}
-        className="block text-[11px] font-medium mb-1"
+        className="block text-[11px] font-medium mb-1 text-foreground/80"
       >
         {label}
       </label>
@@ -41,18 +41,19 @@ export const FormSelect = ({
       onChange={(e) => onChange?.(e.target.value)}
       disabled={disabled}
       {...props}
-      className={`w-full text-xs px-2.5 py-1.5 rounded border outline-none transition-all ${
+      className={cn(
+        "w-full text-xs px-2.5 py-1.5 rounded border outline-none transition-all appearance-none",
         disabled
-          ? "bg-slate-50 text-slate-400 border-slate-200"
-          : "bg-background border-input focus:border-primary focus:ring-1 focus:ring-primary"
-      }`}
+          ? "bg-muted text-muted-foreground border-border cursor-not-allowed"
+          : "bg-background text-foreground border-input focus:border-primary focus:ring-1 focus:ring-primary"
+      )}
     >
       {options.map((item, idx) => (
-        <option key={item.value + idx} value={item.value}>
+        <option key={item.value + idx} value={item.value} className="bg-background text-foreground">
           {item.label}
         </option>
       ))}
     </select>
-    {description && <span className="text-[10px]">{description}</span>}
+    {description && <span className="text-[10px] text-muted-foreground">{description}</span>}
   </div>
 );

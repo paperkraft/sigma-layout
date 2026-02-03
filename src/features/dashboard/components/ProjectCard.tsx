@@ -3,10 +3,10 @@ import { AlertCircle, CheckCircle2, FileText, FolderOpen, Loader2, MoreVertical 
 
 export default function ProjectCard({ project }: any) {
    const statusColor = {
-      running: "text-blue-600 bg-blue-50 border-blue-100",
-      success: "text-green-600 bg-green-50 border-green-100",
-      failed: "text-red-600 bg-red-50 border-red-100",
-      draft: "text-slate-500 bg-slate-100 border-slate-200",
+      running: "text-blue-600 bg-blue-50 border-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800",
+      success: "text-green-600 bg-green-50 border-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800",
+      failed: "text-red-600 bg-red-50 border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800",
+      draft: "text-slate-500 bg-slate-100 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700",
    };
 
    const StatusIcon = {
@@ -17,24 +17,24 @@ export default function ProjectCard({ project }: any) {
    }[project.status as keyof typeof statusColor];
 
    return (
-      <div className="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-md hover:border-slate-300 transition-all cursor-pointer flex flex-col">
+      <div className="group bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer flex flex-col">
          {/* Thumbnail Area */}
-         <div className="h-32 bg-slate-100 relative overflow-hidden">
+         <div className="h-32 bg-muted relative overflow-hidden">
             {project.thumbnail ? (
-               <div 
+               <div
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                  style={{ backgroundImage: `url(${project.thumbnail})` }} 
+                  style={{ backgroundImage: `url(${project.thumbnail})` }}
                />
             ) : (
-               <div className="absolute inset-0 flex items-center justify-center text-slate-300">
+               <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/40">
                   <FolderOpen size={32} />
                </div>
             )}
-            
+
             {/* Overlay Status Badge */}
             <div className="absolute top-3 right-3">
                <span className={cn(
-                  "text-[10px] font-bold px-2 py-1 rounded-full border flex items-center gap-1.5 uppercase tracking-wide backdrop-blur-sm",
+                  "text-[10px] font-bold px-2 py-1 rounded-full border flex items-center gap-1.5 uppercase tracking-wide backdrop-blur-md shadow-sm",
                   statusColor[project.status as keyof typeof statusColor]
                )}>
                   <StatusIcon size={10} className={cn(project.status === 'running' && "animate-spin")} />
@@ -47,12 +47,12 @@ export default function ProjectCard({ project }: any) {
          <div className="p-4 flex flex-col flex-1">
             <div className="flex justify-between items-start mb-2">
                <div>
-                  <h4 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+                  <h4 className="text-sm font-bold text-card-foreground group-hover:text-primary transition-colors line-clamp-1">
                      {project.name}
                   </h4>
-                  <p className="text-xs text-slate-500">{project.type}</p>
+                  <p className="text-xs text-muted-foreground">{project.type}</p>
                </div>
-               <button className="text-slate-400 hover:text-slate-700">
+               <button className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md hover:bg-muted">
                   <MoreVertical size={16} />
                </button>
             </div>
@@ -60,19 +60,19 @@ export default function ProjectCard({ project }: any) {
             {/* Progress Bar if running */}
             {project.status === 'running' && (
                <div className="mt-2 mb-3">
-                  <div className="flex justify-between text-[10px] text-slate-500 mb-1">
+                  <div className="flex justify-between text-[10px] text-muted-foreground mb-1">
                      <span>Simulating...</span>
                      <span>{project.progress}%</span>
                   </div>
-                  <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                     <div className="h-full bg-blue-500 rounded-full" style={{ width: `${project.progress}%` }} />
+                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                     <div className="h-full bg-primary rounded-full" style={{ width: `${project.progress}%` }} />
                   </div>
                </div>
             )}
 
-            <div className="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
+            <div className="mt-auto pt-3 border-t border-border flex items-center justify-between text-[10px] text-muted-foreground">
                <span>Edited {project.lastEdited}</span>
-               <span className="group-hover:translate-x-1 transition-transform">Open</span>
+               <span className="group-hover:translate-x-1 transition-transform text-foreground font-medium">Open</span>
             </div>
          </div>
       </div>

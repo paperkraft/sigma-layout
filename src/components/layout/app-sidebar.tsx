@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation';
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu,
   SidebarMenuButton, SidebarMenuItem, SidebarRail,
-  useSidebar
 } from '@/components/ui/sidebar';
 import { sidebarMenuGroups } from '@/config/sidebar_menu';
 import { cn } from '@/lib/utils';
@@ -16,14 +15,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path || pathname.startsWith(path);
 
-  const open = useSidebar()
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarContent className="bg-background">
         {sidebarMenuGroups.map((group) => (
           <SidebarGroup key={group.label}>
-            <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+            <SidebarGroupLabel>
+              {group.label}
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((menu) => (
@@ -32,12 +31,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       asChild
                       isActive={isActive(menu?.url)}
                       tooltip={menu.title}
+                      className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
                     >
                       <Link
                         href={menu?.url}
-                        className={cn("hover:text-primary!", {
-                          "text-primary!": isActive(menu?.url),
-                        })}
+                        className={cn(
+                          "transition-colors duration-200 flex items-center gap-2",
+                          isActive(menu?.url)
+                            ? "text-primary! font-semibold"
+                            : "text-sidebar-foreground/80 hover:text-primary!"
+                        )}
                       >
                         <menu.icon />
                         {menu.title}
@@ -54,7 +57,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter className="bg-background mb-14">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Help & Support">
+            <SidebarMenuButton
+              tooltip="Help & Support"
+              className="text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
+            >
               <HelpCircle />
               Help & Support
             </SidebarMenuButton>

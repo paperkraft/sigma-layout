@@ -63,13 +63,13 @@ export const ProjectList = () => {
     });
 
     return (
-        <div className="flex" onClick={() => setSelectedId(null)}>
+        <div className="flex h-full" onClick={() => setSelectedId(null)}>
             <div className="flex-1 flex flex-col min-w-0 z-0 p-6 md:p-8 space-y-4">
                 {/* HEADER & ACTIONS */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-900">Projects</h1>
-                        <p className="text-slate-500 text-sm mt-1">Manage your projects</p>
+                        <h1 className="text-2xl font-bold text-foreground">Projects</h1>
+                        <p className="text-muted-foreground text-sm mt-1">Manage your projects</p>
                     </div>
                     <Button><Plus size={16} className="mr-1" />New Project</Button>
                 </div>
@@ -82,25 +82,26 @@ export const ProjectList = () => {
                             value={searchQuery}
                             onChange={setSearchQuery}
                             placeholder="Search projects..."
+                            className="bg-background"
                         />
                         {searchQuery && (
                             <button
                                 onClick={() => setSearchQuery('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-0.5 rounded-full"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground hover:bg-muted p-0.5 rounded-full"
                             >
                                 <X size={14} />
                             </button>
                         )}
                     </div>
 
-                    <div className="flex bg-muted p-1 rounded border">
+                    <div className="flex bg-muted p-1 rounded border border-border">
                         <button
                             onClick={() => setViewMode('grid')}
                             className={cn(
-                                'p-1.5 rounded',
+                                'p-1.5 rounded transition-colors',
                                 viewMode === 'grid'
                                     ? 'bg-background text-primary shadow-sm'
-                                    : 'text-muted-foreground'
+                                    : 'text-muted-foreground hover:text-foreground'
                             )}
                         >
                             <LayoutGrid size={16} />
@@ -108,10 +109,10 @@ export const ProjectList = () => {
                         <button
                             onClick={() => setViewMode('list')}
                             className={cn(
-                                'p-1.5 rounded',
+                                'p-1.5 rounded transition-colors',
                                 viewMode === 'list'
                                     ? 'bg-background text-primary shadow-sm'
-                                    : 'text-muted-foreground'
+                                    : 'text-muted-foreground hover:text-foreground'
                             )}
                         >
                             <List size={16} />
@@ -122,9 +123,12 @@ export const ProjectList = () => {
                         <Button
                             variant="ghost"
                             size="icon-sm"
-                            onClick={() => setViewPanel(true)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setViewPanel(true);
+                            }}
                         >
-                            <Info size={16} className='text-slate-500' />
+                            <Info size={16} className='text-muted-foreground' />
                         </Button>
                     )}
                 </div>
@@ -134,8 +138,8 @@ export const ProjectList = () => {
                     <div className="flex-1 overflow-y-auto p-1">
                         {!loading && filteredProjects.length === 0 && (
                             <div className="text-center py-20">
-                                <Search className="mx-auto text-slate-400 mb-3" />
-                                <p className="text-sm text-slate-500">
+                                <Search className="mx-auto text-muted-foreground/50 mb-3" />
+                                <p className="text-sm text-muted-foreground">
                                     No projects match "{searchQuery}"
                                 </p>
                             </div>
@@ -155,20 +159,22 @@ export const ProjectList = () => {
                                 ))}
                             </div>
                         ) : (
-                            <table className="w-full text-sm">
-                                <tbody>
-                                    {filteredProjects.map((p) => (
-                                        <ListRow
-                                            key={p.id}
-                                            data={p}
-                                            type={p.type}
-                                            isSelected={selectedId === p.id}
-                                            onClick={() => setSelectedId(p.id)}
-                                            openProject={() => handleOpenProject({ type: p.type, id: p.id })}
-                                        />
-                                    ))}
-                                </tbody>
-                            </table>
+                            <div className="rounded-md border border-border overflow-hidden">
+                                <table className="w-full text-sm">
+                                    <tbody>
+                                        {filteredProjects.map((p) => (
+                                            <ListRow
+                                                key={p.id}
+                                                data={p}
+                                                type={p.type}
+                                                isSelected={selectedId === p.id}
+                                                onClick={() => setSelectedId(p.id)}
+                                                openProject={() => handleOpenProject({ type: p.type, id: p.id })}
+                                            />
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         )}
                     </div>
                 </div>

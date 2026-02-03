@@ -37,7 +37,7 @@ export const FormInput = ({
     {label && (
       <label
         htmlFor={id ?? label}
-        className="block text-[11px] font-medium mb-1"
+        className="block text-[11px] font-medium mb-1 text-foreground/80"
       >
         {label}
       </label>
@@ -53,11 +53,12 @@ export const FormInput = ({
         disabled={disabled}
         placeholder={placeholder}
         rows={rows ?? 3}
-        className={`w-full text-xs px-2.5 py-1.5 rounded border outline-none transition-all ${
+        className={cn(
+          "w-full text-xs px-2.5 py-1.5 rounded border outline-none transition-all placeholder:text-muted-foreground/50",
           disabled
-            ? "bg-slate-50 text-slate-400 border-slate-200"
-            : "bg-background border-input focus:border-primary focus:ring-1 focus:ring-primary"
-        }`}
+            ? "bg-muted text-muted-foreground border-border cursor-not-allowed"
+            : "bg-background text-foreground border-input focus:border-primary focus:ring-1 focus:ring-primary"
+        )}
       />
     )}
 
@@ -71,15 +72,16 @@ export const FormInput = ({
         onKeyDown={(e) => onKeyDown?.(e)}
         disabled={disabled}
         placeholder={placeholder}
-        className={`w-full text-xs px-2.5 py-1.5 rounded border outline-none transition-all ${
+        className={cn(
+          "w-full text-xs px-2.5 py-1.5 rounded border outline-none transition-all placeholder:text-muted-foreground/50",
           disabled
-            ? "bg-slate-50 text-slate-400 border-slate-200"
-            : "bg-white border-input focus:border-primary focus:ring-1 focus:ring-primary"
-        }`}
+            ? "bg-muted text-muted-foreground border-border cursor-not-allowed"
+            : "bg-background text-foreground border-input focus:border-primary focus:ring-1 focus:ring-primary"
+        )}
         step={step}
       />
     )}
 
-    {description && <span className="text-[10px]">{description}</span>}
+    {description && <span className="text-[10px] text-muted-foreground">{description}</span>}
   </div>
 );
