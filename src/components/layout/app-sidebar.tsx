@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import {
-  Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu,
-  SidebarMenuButton, SidebarMenuItem, SidebarRail,
+  Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
+  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail
 } from '@/components/ui/sidebar';
 import { sidebarMenuGroups } from '@/config/sidebar_menu';
 import { cn } from '@/lib/utils';
@@ -17,7 +17,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarContent className="bg-background">
+      <SidebarContent className="bg-background dark:bg-popover">
         {sidebarMenuGroups.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel>
@@ -31,7 +31,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       asChild
                       isActive={isActive(menu?.url)}
                       tooltip={menu.title}
-                      className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
                     >
                       <Link
                         href={menu?.url}
@@ -54,7 +53,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="bg-background mb-14">
+      <SidebarFooter className="bg-background dark:bg-popover md:mb-14">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton

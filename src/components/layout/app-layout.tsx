@@ -3,17 +3,17 @@
 import React, { ReactNode } from 'react';
 
 import { Header } from '@/components/layout/app-header';
+import { cn } from '@/lib/utils';
 
 import { SidebarProvider } from '../ui/sidebar';
 import { AppSidebar } from './app-sidebar';
-import { cn } from '@/lib/utils';
 
 export default function AppLayout({ children, className }: { children: ReactNode, className?: string }) {
   return (
     <SidebarProvider>
       <div className="w-full flex flex-col font-sans">
         <div className="sticky top-0 z-50">
-          <Header isWorkbench={false} />
+          <Header />
         </div>
 
         <div className="flex flex-1">
