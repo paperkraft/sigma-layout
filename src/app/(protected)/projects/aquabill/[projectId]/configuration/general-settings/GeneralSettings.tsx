@@ -1,41 +1,33 @@
-import React, { useState } from 'react';
+'use client'
 import {
-    Save,
-    RotateCcw,
-    Info,
-    Mail,
-    Wallet,
-    AlertTriangle,
-    Zap,
-    Shield,
-    CheckCircle2,
-    DollarSign
+    AlertTriangle, CheckCircle2, DollarSign, Mail, RotateCcw, Save, Shield, Wallet, Zap
 } from 'lucide-react';
+import React, { useState } from 'react';
 
 // --- Components ---
 
 const Switch = ({ checked, onChange }: any) => (
     <button
         onClick={() => onChange(!checked)}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${checked ? 'bg-violet-600' : 'bg-slate-200'}`}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-card ${checked ? 'bg-primary' : 'bg-input'}`}
     >
-        <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`} />
+        <span className={`inline-block h-4 w-4 transform rounded-full bg-background transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`} />
     </button>
 );
 
 const Input = ({ label, prefix, suffix, value, disabled, placeholder }: any) => (
     <div className={`flex flex-col ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
-        {label && <span className="text-xs font-semibold text-slate-500 mb-1.5">{label}</span>}
+        {label && <span className="text-xs font-semibold text-muted-foreground mb-1.5">{label}</span>}
         <div className="relative">
-            {prefix && <span className="absolute left-3 top-2 text-slate-400 text-sm">{prefix}</span>}
+            {prefix && <span className="absolute left-3 top-2 text-muted-foreground text-sm">{prefix}</span>}
             <input
                 type="text"
-                value={value}
+                defaultValue={value}
                 disabled={disabled}
                 placeholder={placeholder}
-                className={`w-full bg-white border border-slate-200 rounded-lg py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all ${prefix ? 'pl-7' : 'pl-3'} ${suffix ? 'pr-8' : 'pr-3'}`}
+                className={`w-full bg-background border border-input rounded-lg py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all ${prefix ? 'pl-7' : 'pl-3'} ${suffix ? 'pr-8' : 'pr-3'}`}
             />
-            {suffix && <span className="absolute right-3 top-2 text-slate-400 text-sm">{suffix}</span>}
+            {suffix && <span className="absolute right-3 top-2 text-muted-foreground text-sm">{suffix}</span>}
         </div>
     </div>
 );
@@ -43,31 +35,31 @@ const Input = ({ label, prefix, suffix, value, disabled, placeholder }: any) => 
 const Select = ({ value, options, disabled }: any) => (
     <div className={`relative ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
         <select
-            value={value}
+            defaultValue={value}
             disabled={disabled}
-            className="w-full appearance-none bg-white border border-slate-200 text-slate-700 text-sm rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+            className="w-full appearance-none bg-background border border-input text-foreground text-sm rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
         >
             {options.map((opt: any) => <option key={opt}>{opt}</option>)}
         </select>
-        <div className="absolute right-3 top-2.5 pointer-events-none text-slate-400">
+        <div className="absolute right-3 top-2.5 pointer-events-none text-muted-foreground">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
         </div>
     </div>
 );
 
 const SettingRow = ({ title, description, icon: Icon, enabled, onToggle, children }: any) => (
-    <div className="p-5 flex flex-col md:flex-row gap-6 border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+    <div className="p-5 flex flex-col md:flex-row gap-6 border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
         {/* Label Section */}
         <div className="flex-1 flex gap-4">
-            <div className={`p-2 rounded-lg h-fit ${enabled ? 'bg-violet-50 text-violet-600' : 'bg-slate-100 text-slate-400'}`}>
+            <div className={`p-2 rounded-lg h-fit ${enabled ? 'bg-primary/10 text-primary' : 'bg-secondary text-muted-foreground'}`}>
                 <Icon className="h-5 w-5" />
             </div>
             <div>
                 <div className="flex items-center gap-3">
-                    <h4 className={`text-sm font-medium ${enabled ? 'text-slate-900' : 'text-slate-500'}`}>{title}</h4>
+                    <h4 className={`text-sm font-medium ${enabled ? 'text-foreground' : 'text-muted-foreground'}`}>{title}</h4>
                     <Switch checked={enabled} onChange={onToggle} />
                 </div>
-                <p className="text-xs text-slate-500 mt-1 max-w-md leading-relaxed">{description}</p>
+                <p className="text-xs text-muted-foreground mt-1 max-w-md leading-relaxed">{description}</p>
             </div>
         </div>
 
@@ -102,19 +94,19 @@ export default function GeneralSettings() {
     };
 
     return (
-        <div className="p-8 space-y-8 animate-in fade-in duration-500 pb-24">
+        <div className="p-8 space-y-8 animate-in fade-in duration-500 pb-24 text-foreground">
 
             {/* 1. Page Header */}
             <div>
-                <h1 className="text-2xl font-bold text-slate-900">General Settings</h1>
-                <p className="text-slate-500 text-sm mt-1">Configure global billing rules, surcharges, and notification preferences.</p>
+                <h1 className="text-2xl font-bold text-foreground">General Settings</h1>
+                <p className="text-muted-foreground text-sm mt-1">Configure global billing rules, surcharges, and notification preferences.</p>
             </div>
 
             {/* 2. Notifications Section */}
-            <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
-                <div className="px-6 py-3 bg-slate-50/50 border-b flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-slate-500" />
-                    <h3 className="font-semibold text-slate-700 text-sm">System Notifications</h3>
+            <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+                <div className="px-6 py-3 bg-muted/30 border-b border-border flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="font-semibold text-foreground text-sm">System Notifications</h3>
                 </div>
                 <SettingRow
                     title="Automatic Email Notifications"
@@ -124,17 +116,17 @@ export default function GeneralSettings() {
                     onToggle={() => toggle('autoEmail')}
                 >
                     <div className="w-full">
-                        <span className="text-xs font-semibold text-slate-500 block mb-1.5">Email Template</span>
+                        <span className="text-xs font-semibold text-muted-foreground block mb-1.5">Email Template</span>
                         <Select options={["Default Invoice Template", "Modern Receipt"]} />
                     </div>
                 </SettingRow>
             </div>
 
             {/* 3. Onboarding & One-time Charges */}
-            <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
-                <div className="px-6 py-3 bg-slate-50/50 border-b flex items-center gap-2">
-                    <Wallet className="h-4 w-4 text-slate-500" />
-                    <h3 className="font-semibold text-slate-700 text-sm">Onboarding & One-time Charges</h3>
+            <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+                <div className="px-6 py-3 bg-muted/30 border-b border-border flex items-center gap-2">
+                    <Wallet className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="font-semibold text-foreground text-sm">Onboarding & One-time Charges</h3>
                 </div>
 
                 <SettingRow
@@ -145,7 +137,7 @@ export default function GeneralSettings() {
                     onToggle={() => toggle('installation')}
                 >
                     <div className="w-1/2">
-                        <span className="text-xs font-semibold text-slate-500 block mb-1.5">Type</span>
+                        <span className="text-xs font-semibold text-muted-foreground block mb-1.5">Type</span>
                         <Select options={["Fixed Amount"]} />
                     </div>
                     <div className="w-1/2">
@@ -161,7 +153,7 @@ export default function GeneralSettings() {
                     onToggle={() => toggle('securityDeposit')}
                 >
                     <div className="w-1/2">
-                        <span className="text-xs font-semibold text-slate-500 block mb-1.5">Type</span>
+                        <span className="text-xs font-semibold text-muted-foreground block mb-1.5">Type</span>
                         <Select options={["Fixed Amount"]} />
                     </div>
                     <div className="w-1/2">
@@ -171,10 +163,10 @@ export default function GeneralSettings() {
             </div>
 
             {/* 4. Recurring & Operational */}
-            <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
-                <div className="px-6 py-3 bg-slate-50/50 border-b flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-slate-500" />
-                    <h3 className="font-semibold text-slate-700 text-sm">Recurring Charges & Rules</h3>
+            <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+                <div className="px-6 py-3 bg-muted/30 border-b border-border flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="font-semibold text-foreground text-sm">Recurring Charges & Rules</h3>
                 </div>
 
                 <SettingRow
@@ -197,7 +189,7 @@ export default function GeneralSettings() {
                     onToggle={() => toggle('serviceCharge')}
                 >
                     <div className="w-1/2">
-                        <span className="text-xs font-semibold text-slate-500 block mb-1.5">Type</span>
+                        <span className="text-xs font-semibold text-muted-foreground block mb-1.5">Type</span>
                         <Select options={["Fixed Amount", "Percentage"]} />
                     </div>
                     <div className="w-1/2">
@@ -225,17 +217,17 @@ export default function GeneralSettings() {
                     onToggle={() => toggle('meterFault')}
                 >
                     <div className="w-full">
-                        <span className="text-xs font-semibold text-slate-500 block mb-1.5">Calculation Basis</span>
+                        <span className="text-xs font-semibold text-muted-foreground block mb-1.5">Calculation Basis</span>
                         <Select options={["Last 3 Months Average", "Last 6 Months Average", "Flat Minimum Rate"]} />
                     </div>
                 </SettingRow>
             </div>
 
             {/* 5. Penalties & Incentives */}
-            <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
-                <div className="px-6 py-3 bg-slate-50/50 border-b flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 text-slate-500" />
-                    <h3 className="font-semibold text-slate-700 text-sm">Penalties & Incentives</h3>
+            <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+                <div className="px-6 py-3 bg-muted/30 border-b border-border flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="font-semibold text-foreground text-sm">Penalties & Incentives</h3>
                 </div>
 
                 <SettingRow
@@ -246,7 +238,7 @@ export default function GeneralSettings() {
                     onToggle={() => toggle('fine')}
                 >
                     <div className="w-1/2">
-                        <span className="text-xs font-semibold text-slate-500 block mb-1.5">Type</span>
+                        <span className="text-xs font-semibold text-muted-foreground block mb-1.5">Type</span>
                         <Select options={["Fixed Amount", "Percentage"]} />
                     </div>
                     <div className="w-1/2">
@@ -286,7 +278,7 @@ export default function GeneralSettings() {
                     onToggle={() => toggle('rebate')}
                 >
                     <div className="w-1/2">
-                        <span className="text-xs font-semibold text-slate-500 block mb-1.5">Type</span>
+                        <span className="text-xs font-semibold text-muted-foreground block mb-1.5">Type</span>
                         <Select options={["Percentage"]} />
                     </div>
                     <div className="w-1/2">
@@ -295,17 +287,17 @@ export default function GeneralSettings() {
                 </SettingRow>
             </div>
 
-            {/* Floating Save Action Bar (Visible when changes are made) */}
-            <div className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-4 transition-all duration-300 z-50 ${hasChanges ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
+            {/* Floating Save Action Bar */}
+            <div className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-foreground text-background dark:bg-zinc-100 dark:text-zinc-900 px-6 py-3 rounded-full shadow-2xl flex items-center gap-4 transition-all duration-300 z-50 ${hasChanges ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
                 <span className="text-sm font-medium">You have unsaved changes</span>
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => setHasChanges(false)}
-                        className="px-3 py-1 text-sm text-slate-300 hover:text-white transition-colors"
+                        className="px-3 py-1 text-sm text-muted/80 hover:text-background dark:hover:text-zinc-900 transition-colors"
                     >
                         Reset
                     </button>
-                    <button className="px-4 py-1.5 bg-violet-600 hover:bg-violet-700 rounded-full text-sm font-bold shadow-sm transition-colors flex items-center">
+                    <button className="px-4 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full text-sm font-bold shadow-sm transition-colors flex items-center">
                         <Save className="h-4 w-4 mr-2" />
                         Save Changes
                     </button>

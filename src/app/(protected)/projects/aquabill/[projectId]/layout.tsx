@@ -1,8 +1,13 @@
-import { Metadata } from "next";
-import { ReactNode } from "react";
-import NotFound from "./not-found";
-import { DUMMY_PROJECTS } from "@/config/project_dummy";
-import { Header } from "@/components/layout/app-header";
+import { Metadata } from 'next';
+import { ReactNode } from 'react';
+
+import { Header } from '@/components/layout/app-header';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { DUMMY_PROJECTS } from '@/config/project_dummy';
+import { AquabillSidebar } from '@/features/projects/aquabill/aquabill-sidebar';
+import { cn } from '@/lib/utils';
+
+import NotFound from './not-found';
 
 export const metadata: Metadata = {
     title: {
@@ -28,14 +33,18 @@ const layout = async ({ children, params }: LayoutProps) => {
     }
 
     return (
-        <div className="w-full flex flex-col font-sans text-slate-700">
-            <div className="sticky top-0 z-50">
-                <Header isWorkbench projectName={project?.name} description={project?.description} />
+        <SidebarProvider>
+            <div className="w-full flex flex-col font-sans">
+                <div className="sticky top-0 z-50">
+                    <Header isWorkbench projectName={project?.name} description={project?.description} />
+                </div>
+
+                <div className="flex flex-1">
+                    <AquabillSidebar className="top-14" />
+                    <main className={cn("w-full flex-1 bg-gray-50 dark:bg-background text-foreground transition-colors duration-300")}>{children}</main>
+                </div>
             </div>
-            <div className="flex-1">
-                {children}
-            </div>
-        </div>
+        </SidebarProvider>
     );
 };
 

@@ -1,7 +1,7 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 import { DUMMY_PROJECTS, getProjectMetadata } from '@/config/project_dummy';
-import AquaBillDashboard from './Dashboard';
+import { Placeholder } from '@/components/shared/Placeholder';
 
 type PageProps = {
     params: Promise<{
@@ -21,19 +21,7 @@ export default async function Page({ params }: PageProps) {
         notFound();
     }
 
-    return (
-        <>
-            <AquaBillDashboard />
-            {/* <div className="space-y-8 p-6 md:p-8">
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className='flex flex-col gap-4'>
-                        <h6>WaterLab Project Content</h6>
-                        <p>{project.name}</p>
-                        <p>{project.description}</p>
-                    </div>
-                </div>
-            </div> */}
-        </>
-    );
+    return redirect(`${projectId}/dashboard`);
+    // return (<Placeholder title={project.name} description={project.description!} />);
 }
 

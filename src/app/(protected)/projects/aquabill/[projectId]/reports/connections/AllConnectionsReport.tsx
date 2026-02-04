@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react';
 import {
     Download,
@@ -17,15 +18,15 @@ import {
     Activity
 } from 'lucide-react';
 
-// --- Mock Data based on Screenshot ---
+// --- Mock Data ---
 const REPORT_DATA = Array.from({ length: 15 }).map((_, i) => ({
     id: `100011${14 + i}`,
     appNo: `${222 + i}`,
     migrated: i % 4 === 0,
-    firstName: ["Kirti", "Devansh", "Rahul", "Priya", "Amit"][i % 5],
-    middleName: ["Gopal", "Mangesh", "S", "A", "Kumar"][i % 5],
+    firstName: ["Nilesh", "Rohit", "Rahul", "Priya", "Amit"][i % 5],
+    middleName: ["J", "P", "S", "A", "K"][i % 5],
     lastName: "Patil",
-    mobile: `74482293${40 + i}`,
+    mobile: `88888888${40 + i}`,
     email: `user${i}@gmail.com`,
     address: "Kolhapur, Ward A, Near Main Sq",
     billMethod: i % 2 === 0 ? "Flat" : "Meter",
@@ -44,9 +45,9 @@ const REPORT_DATA = Array.from({ length: 15 }).map((_, i) => ({
 
 const Button = ({ children, variant = "secondary", size = "default", className, icon: Icon, ...props }: any) => {
     const variants: Record<string, string> = {
-        primary: "bg-violet-600 text-white hover:bg-violet-700 shadow-sm",
-        secondary: "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50",
-        ghost: "bg-transparent text-slate-600 hover:bg-slate-100",
+        primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm",
+        secondary: "bg-card border border-border text-foreground hover:bg-accent hover:text-accent-foreground",
+        ghost: "bg-transparent text-muted-foreground hover:bg-accent hover:text-foreground",
     };
     const sizes: Record<string, string> = {
         sm: "px-3 py-1.5 text-xs",
@@ -54,7 +55,7 @@ const Button = ({ children, variant = "secondary", size = "default", className, 
         icon: "p-2"
     };
     return (
-        <button className={`inline-flex items-center justify-center font-medium rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-violet-500 ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
+        <button className={`inline-flex items-center justify-center font-medium rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary/50 ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
             {Icon && <Icon className={`h-4 w-4 ${children ? 'mr-2' : ''}`} />}
             {children}
         </button>
@@ -63,8 +64,8 @@ const Button = ({ children, variant = "secondary", size = "default", className, 
 
 const Select = ({ label, options }: any) => (
     <div className="space-y-1 min-w-30">
-        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{label}</label>
-        <select className="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-md px-2 py-1.5 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
+        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{label}</label>
+        <select className="w-full bg-card border border-border text-foreground text-sm rounded-md px-2 py-1.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow">
             <option>All</option>
             {options.map((opt: any) => <option key={opt}>{opt}</option>)}
         </select>
@@ -73,11 +74,11 @@ const Select = ({ label, options }: any) => (
 
 const Badge = ({ children, variant }: any) => {
     const styles: Record<string, string> = {
-        green: "bg-emerald-50 text-emerald-700 border-emerald-100",
-        blue: "bg-blue-50 text-blue-700 border-blue-100",
-        slate: "bg-slate-100 text-slate-600 border-slate-200",
-        purple: "bg-violet-50 text-violet-700 border-violet-100",
-        orange: "bg-orange-50 text-orange-700 border-orange-100"
+        green: "bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800",
+        blue: "bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-800",
+        slate: "bg-secondary text-muted-foreground border-border",
+        purple: "bg-violet-50 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border-violet-100 dark:border-violet-800",
+        orange: "bg-orange-50 dark:bg-orange-500/20 text-orange-700 dark:text-orange-400 border-orange-100 dark:border-orange-800"
     };
     return (
         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wide ${styles[variant] || styles.slate}`}>
@@ -90,13 +91,13 @@ export default function AllConnectionsReport() {
     const [isCompact, setIsCompact] = useState(false);
 
     return (
-        <div className="p-6 space-y-6 h-screen flex flex-col bg-slate-50/50">
+        <div className="p-6 space-y-6 h-screen flex flex-col text-foreground">
 
             {/* 1. Header & Actions */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Connections Master Report</h1>
-                    <p className="text-slate-500 text-sm mt-1">Unified view of subscriber data, technical specs, and location details.</p>
+                    <h1 className="text-2xl font-bold text-foreground">Connections Master Report</h1>
+                    <p className="text-muted-foreground text-sm mt-1">Unified view of subscriber data, technical specs, and location details.</p>
                 </div>
                 <div className="flex gap-2">
                     <Button variant="secondary" icon={Printer}>Print</Button>
@@ -105,7 +106,7 @@ export default function AllConnectionsReport() {
             </div>
 
             {/* 2. Filter Bar */}
-            <div className="bg-white border rounded-xl shadow-sm p-4 shrink-0">
+            <div className="bg-card border border-border rounded-xl shadow-sm p-4 shrink-0">
                 <div className="flex flex-col lg:flex-row gap-4 items-end">
                     <div className="flex-1 overflow-x-auto pb-2 lg:pb-0 w-full">
                         <div className="flex gap-3 min-w-max">
@@ -122,29 +123,29 @@ export default function AllConnectionsReport() {
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                                className="w-full pl-9 pr-4 py-2 bg-secondary/30 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground placeholder:text-muted-foreground"
                             />
-                            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* 3. Grouped Data Grid */}
-            <div className="bg-white border rounded-xl shadow-sm flex-1 flex flex-col overflow-hidden relative">
+            <div className="bg-card border border-border rounded-xl shadow-sm flex-1 flex flex-col overflow-hidden relative">
 
                 {/* Toolbar */}
-                <div className="px-4 py-2 border-b bg-slate-50/50 flex justify-between items-center shrink-0">
-                    <div className="text-xs text-slate-500 font-medium">1,240 Total Connections</div>
+                <div className="px-4 py-2 border-b border-border bg-muted/30 flex justify-between items-center shrink-0">
+                    <div className="text-xs text-muted-foreground font-medium">1,240 Total Connections</div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => setIsCompact(!isCompact)}
-                            className={`p-1.5 rounded hover:bg-slate-200 transition-colors ${isCompact ? 'text-violet-600 bg-violet-50' : 'text-slate-500'}`}
+                            className={`p-1.5 rounded hover:bg-secondary transition-colors ${isCompact ? 'text-primary bg-primary/10' : 'text-muted-foreground'}`}
                             title="Compact View"
                         >
                             <Layout className="h-4 w-4" />
                         </button>
-                        <button className="flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded border bg-white">
+                        <button className="flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-muted-foreground hover:bg-secondary rounded border border-border bg-card">
                             <Settings2 className="h-3.5 w-3.5" /> Columns
                         </button>
                     </div>
@@ -153,43 +154,43 @@ export default function AllConnectionsReport() {
                 {/* Table */}
                 <div className="flex-1 overflow-auto">
                     <table className="w-full text-left border-collapse">
-                        <thead className="bg-slate-50 text-slate-500 text-xs font-bold uppercase tracking-wider sticky top-0 z-20 shadow-sm">
+                        <thead className="bg-muted/50 text-muted-foreground text-xs font-bold uppercase tracking-wider sticky top-0 z-20 shadow-sm backdrop-blur-sm">
                             <tr>
-                                <th className="px-6 py-3 border-b">Customer Identity</th>
-                                <th className="px-6 py-3 border-b">Contact Info</th>
-                                <th className="px-6 py-3 border-b">Billing Config</th>
-                                <th className="px-6 py-3 border-b">Technical Specs</th>
-                                <th className="px-6 py-3 border-b">Location</th>
-                                <th className="px-6 py-3 border-b text-center">Status</th>
+                                <th className="px-6 py-3 border-b border-border">Customer Identity</th>
+                                <th className="px-6 py-3 border-b border-border">Contact Info</th>
+                                <th className="px-6 py-3 border-b border-border">Billing Config</th>
+                                <th className="px-6 py-3 border-b border-border">Technical Specs</th>
+                                <th className="px-6 py-3 border-b border-border">Location</th>
+                                <th className="px-6 py-3 border-b border-border text-center">Status</th>
                             </tr>
                         </thead>
-                        <tbody className={`divide-y divide-slate-100 ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                        <tbody className={`divide-y divide-border ${isCompact ? 'text-xs' : 'text-sm'}`}>
                             {REPORT_DATA.map((row, idx) => (
-                                <tr key={idx} className="hover:bg-slate-50/50 transition-colors group">
+                                <tr key={idx} className="hover:bg-accent/50 transition-colors group">
 
                                     {/* Column 1: Customer Identity */}
                                     <td className={`px-6 ${isCompact ? 'py-2' : 'py-4'} align-top`}>
                                         <div className="flex flex-col">
-                                            <span className="font-semibold text-slate-900 text-base">
+                                            <span className="font-semibold text-foreground text-base">
                                                 {row.firstName} {row.middleName} {row.lastName}
                                             </span>
                                             <div className="flex items-center gap-2 mt-1">
-                                                <span className="font-mono text-xs text-slate-500 bg-slate-100 px-1.5 rounded border">ID: {row.id}</span>
+                                                <span className="font-mono text-xs text-muted-foreground bg-secondary px-1.5 rounded border border-border">ID: {row.id}</span>
                                                 {row.migrated && <Badge variant="purple">Migrated</Badge>}
                                             </div>
-                                            <span className="text-xs text-slate-400 mt-0.5">App No: {row.appNo}</span>
+                                            <span className="text-xs text-muted-foreground mt-0.5">App No: {row.appNo}</span>
                                         </div>
                                     </td>
 
                                     {/* Column 2: Contact Info */}
                                     <td className={`px-6 ${isCompact ? 'py-2' : 'py-4'} align-top`}>
                                         <div className="space-y-1">
-                                            <div className="flex items-center text-slate-700">
-                                                <Phone className="h-3.5 w-3.5 mr-2 text-slate-400" />
+                                            <div className="flex items-center text-foreground">
+                                                <Phone className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
                                                 {row.mobile}
                                             </div>
-                                            <div className="flex items-center text-slate-600">
-                                                <Mail className="h-3.5 w-3.5 mr-2 text-slate-400" />
+                                            <div className="flex items-center text-muted-foreground">
+                                                <Mail className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
                                                 {row.email}
                                             </div>
                                         </div>
@@ -199,16 +200,16 @@ export default function AllConnectionsReport() {
                                     <td className={`px-6 ${isCompact ? 'py-2' : 'py-4'} align-top`}>
                                         <div className="flex flex-col gap-1.5">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-slate-500 text-xs">Method:</span>
-                                                <span className="font-medium text-slate-700">{row.billMethod}</span>
+                                                <span className="text-muted-foreground text-xs">Method:</span>
+                                                <span className="font-medium text-foreground">{row.billMethod}</span>
                                             </div>
                                             <div className="flex items-center justify-between">
-                                                <span className="text-slate-500 text-xs">Cycle:</span>
-                                                <span className="font-medium text-slate-700">{row.billCycle}</span>
+                                                <span className="text-muted-foreground text-xs">Cycle:</span>
+                                                <span className="font-medium text-foreground">{row.billCycle}</span>
                                             </div>
-                                            <div className="flex items-center justify-between border-t border-dashed pt-1 mt-0.5">
-                                                <span className="text-slate-500 text-xs">Type:</span>
-                                                <span className="font-medium text-slate-700">{row.connType}</span>
+                                            <div className="flex items-center justify-between border-t border-dashed border-border pt-1 mt-0.5">
+                                                <span className="text-muted-foreground text-xs">Type:</span>
+                                                <span className="font-medium text-foreground">{row.connType}</span>
                                             </div>
                                         </div>
                                     </td>
@@ -224,14 +225,14 @@ export default function AllConnectionsReport() {
                                                     <Badge variant="orange">Flat</Badge>
                                                 )}
                                             </div>
-                                            <div className="text-xs text-slate-500 mt-1 space-y-0.5">
+                                            <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
                                                 <div className="flex items-center">
                                                     <Activity className="h-3 w-3 mr-1.5 opacity-50" />
-                                                    Meter: <span className="text-slate-700 ml-1 font-mono">{row.meterNo || 'N/A'}</span>
+                                                    Meter: <span className="text-foreground ml-1 font-mono">{row.meterNo || 'N/A'}</span>
                                                 </div>
                                                 <div className="flex items-center">
                                                     <Hash className="h-3 w-3 mr-1.5 opacity-50" />
-                                                    GIS: <span className="text-slate-700 ml-1 font-mono">{row.gisId}</span>
+                                                    GIS: <span className="text-foreground ml-1 font-mono">{row.gisId}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -240,23 +241,23 @@ export default function AllConnectionsReport() {
                                     {/* Column 5: Location */}
                                     <td className={`px-6 ${isCompact ? 'py-2' : 'py-4'} align-top`}>
                                         <div className="flex flex-col">
-                                            <span className="font-medium text-slate-700 flex items-center">
-                                                <MapPin className="h-3.5 w-3.5 mr-1.5 text-slate-400" />
+                                            <span className="font-medium text-foreground flex items-center">
+                                                <MapPin className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                                                 {row.zone}
                                             </span>
-                                            <span className="text-xs text-slate-500 ml-5">{row.address}</span>
+                                            <span className="text-xs text-muted-foreground ml-5">{row.address}</span>
                                             <div className="ml-5 mt-1">
-                                                <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded border">{row.zoneTag}</span>
+                                                <span className="text-[10px] bg-secondary text-muted-foreground px-1.5 py-0.5 rounded border border-border">{row.zoneTag}</span>
                                             </div>
                                         </div>
                                     </td>
 
                                     {/* Column 6: Status */}
                                     <td className={`px-6 ${isCompact ? 'py-2' : 'py-4'} align-top text-center`}>
-                                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
                                             Active
                                         </span>
-                                        <div className="text-[10px] text-slate-400 mt-1 flex items-center justify-center">
+                                        <div className="text-[10px] text-muted-foreground mt-1 flex items-center justify-center">
                                             <Calendar className="h-3 w-3 mr-1" />
                                             {row.dateCreated}
                                         </div>
@@ -269,10 +270,10 @@ export default function AllConnectionsReport() {
                 </div>
 
                 {/* Footer */}
-                <div className="p-3 border-t bg-white shrink-0 flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm text-slate-500">
+                <div className="p-3 border-t border-border bg-card shrink-0 flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <span>Rows per page:</span>
-                        <select className="bg-slate-50 border border-slate-200 text-xs rounded px-2 py-1">
+                        <select className="bg-card border border-border text-xs rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary">
                             <option>15</option>
                             <option>50</option>
                             <option>100</option>
@@ -280,10 +281,14 @@ export default function AllConnectionsReport() {
                     </div>
 
                     <div className="flex items-center gap-2 text-sm">
-                        <span className="text-slate-500">1-15 of 1,240</span>
+                        <span className="text-muted-foreground">1-15 of 1,240</span>
                         <div className="flex gap-1">
-                            <button className="p-1.5 hover:bg-slate-100 rounded border disabled:opacity-50"><ChevronLeft className="h-4 w-4" /></button>
-                            <button className="p-1.5 hover:bg-slate-100 rounded border"><ChevronRight className="h-4 w-4" /></button>
+                            <button className="p-1.5 hover:bg-secondary rounded border border-border disabled:opacity-50 text-muted-foreground hover:text-foreground">
+                                <ChevronLeft className="h-4 w-4" />
+                            </button>
+                            <button className="p-1.5 hover:bg-secondary rounded border border-border text-muted-foreground hover:text-foreground">
+                                <ChevronRight className="h-4 w-4" />
+                            </button>
                         </div>
                     </div>
                 </div>

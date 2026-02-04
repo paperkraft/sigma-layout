@@ -1,18 +1,7 @@
-import { FolderKanban, LayoutDashboard, LucideIcon, MessagesSquare, Share2, Wallet } from "lucide-react";
+import { NavMenuGroup } from "@/components/layout/nav-sidebar";
+import { FolderKanban, LayoutDashboard, MessagesSquare, Share2, Wallet } from "lucide-react";
 
-export interface SidebarMenuItem {
-    title: string;
-    url: string;
-    icon: LucideIcon;
-    exact?: boolean;
-}
-
-export interface SidebarMenuGroup {
-    label: string;
-    items: SidebarMenuItem[];
-}
-
-export const sidebarMenuGroups: SidebarMenuGroup[] = [
+export const sidebarMenuGroups: NavMenuGroup[] = [
     {
         label: "Overview",
         items: [

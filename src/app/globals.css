@@ -47,7 +47,8 @@
   --radius: 0.65rem;
   /* LIGHT THEME (Clean White/Slate) */
   --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
+  /* --foreground: oklch(0.141 0.005 285.823); */
+  --foreground: oklch(0.269 0.041 264.695);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);

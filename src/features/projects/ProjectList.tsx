@@ -50,7 +50,12 @@ export const ProjectList = () => {
     }, [selectedId]);
 
     const handleOpenProject = useCallback(({ type, id }: { type: string, id: string }) => {
-        router.replace(`/projects/${type}/${id}`);
+        if (type == 'aquabill') {
+            router.replace(`/projects/${type}/${id}/dashboard`);
+        } else {
+            router.replace(`/projects/${type}/${id}`);
+        }
+
     }, []);
 
     const filteredProjects = projects.filter((p) => {

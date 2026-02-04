@@ -31,12 +31,14 @@ export const Header = ({
   return (
     <header className="h-14 w-full bg-background dark:bg-popover border-b border-border flex items-center justify-between px-3 shrink-0 transition-colors duration-300">
       <div className="flex items-center gap-2">
-        {!isWorkbench && isMobile && (<CustomTrigger />)}
+        {isMobile && (<CustomTrigger />)}
 
         <div className="flex items-center gap-2">
-          <div className="size-8 bg-primary rounded flex items-center justify-center text-primary-foreground font-bold text-lg">
-            S
-          </div>
+          {!isMobile && (
+            <div className="size-8 bg-primary rounded flex items-center justify-center text-primary-foreground font-bold text-lg">
+              S
+            </div>
+          )}
 
           {!isWorkbench && (
             <span className="font-bold text-base text-foreground leading-tight">
@@ -56,7 +58,7 @@ export const Header = ({
           )}
         </div>
 
-        {isWorkbench && (
+        {isWorkbench && !isMobile && (
           <>
             <div className="h-4 w-px bg-border mx-2" />
             <nav className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
