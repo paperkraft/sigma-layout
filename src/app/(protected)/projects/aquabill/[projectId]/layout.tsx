@@ -34,14 +34,14 @@ const layout = async ({ children, params }: LayoutProps) => {
 
     return (
         <SidebarProvider>
-            <div className="w-full flex flex-col font-sans">
+            <div className="w-full flex flex-col font-sans text-foreground">
                 <div className="sticky top-0 z-50">
                     <Header isWorkbench projectName={project?.name} description={project?.description} />
                 </div>
 
                 <div className="flex flex-1">
                     <AquabillSidebar className="top-14" />
-                    <main className={cn("w-full flex-1 bg-gray-50 dark:bg-background text-foreground transition-colors duration-300")}>
+                    <main className={cn("w-full flex-1 bg-gray-50 dark:bg-background transition-colors duration-300")}>
                         {children}
                     </main>
                 </div>
