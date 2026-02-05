@@ -137,8 +137,8 @@ export default function MeterBillGeneration() {
                     <p className="text-muted-foreground text-sm mt-1">Manage usage-based billing. Input readings and generate invoices.</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" icon={Download}>Export Template</Button>
                     <Button variant="secondary" icon={History}>View Logs</Button>
+                    <Button variant="secondary" icon={Download}>Export Report</Button>
                 </div>
             </div>
 

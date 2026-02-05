@@ -1,10 +1,9 @@
-import MasterDataManager from "./Master";
+import MeterRentScreen from "./MeterRent";
 
 export default function Page() {
-
     return (
         <>
-            <MasterDataManager />
+            <MeterRentScreen />
         </>
     );
 }

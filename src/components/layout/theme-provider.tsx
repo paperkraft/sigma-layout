@@ -1,13 +1,16 @@
 "use client"
 
-import * as React from "react"
-import { ThemeProvider as NextThemesProvider } from "next-themes"
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import NextTopLoader from 'nextjs-toploader';
+import * as React from 'react';
+
+import { useMount } from '@/hooks/use-mount';
 
 export function ThemeProvider({
   children,
   ...props
 }: React.ComponentProps<typeof NextThemesProvider>) {
+  const isMounted = useMount();
   return (
     <NextThemesProvider {...props}>
       <NextTopLoader
@@ -22,7 +25,8 @@ export function ThemeProvider({
         shadow="0 0 10px var(--primary),0 0 5px var(--primary)"
         zIndex={99999}
       />
-      {children}
+
+      {isMounted && children}
     </NextThemesProvider>
   )
 }

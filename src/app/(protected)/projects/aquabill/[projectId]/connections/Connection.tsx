@@ -1,7 +1,7 @@
 'use client'
 import {
     ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Edit3,
-    Eye, FilterX, History, MapPin, MoreHorizontal, PowerOff, RefreshCw, Search, Settings, Trash2,
+    Eye, FilterX, History, MapPin, MoreHorizontal, Plus, PowerOff, RefreshCw, Search, Settings, Trash2,
     User, XCircle
 } from 'lucide-react';
 import React, { useState } from 'react';
@@ -146,7 +146,7 @@ export default function ConnectionsPage() {
                 </div>
                 <div className="flex gap-2">
                     <Button variant="secondary" icon={Download}>Export List</Button>
-                    <Button variant="primary" icon={RefreshCw}>Sync Data</Button>
+                    <Button variant="primary" icon={Plus}>New Connection</Button>
                 </div>
             </div>
 

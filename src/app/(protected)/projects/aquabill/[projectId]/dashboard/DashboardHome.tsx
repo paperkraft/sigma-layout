@@ -19,8 +19,8 @@ const revenueData = [
 ];
 
 const recentPayments = [
-    { id: "TXN-8821", name: "Kirti Gopal Patil", amount: "₹450.00", date: "Today, 10:23 AM", status: "Success", method: "UPI" },
-    { id: "TXN-8822", name: "Devansh M Patil", amount: "₹1,200.00", date: "Today, 09:15 AM", status: "Success", method: "Cash" },
+    { id: "TXN-8821", name: "Nilesh Patil", amount: "₹450.00", date: "Today, 10:23 AM", status: "Success", method: "UPI" },
+    { id: "TXN-8822", name: "Mayur Patil", amount: "₹1,200.00", date: "Today, 09:15 AM", status: "Success", method: "Cash" },
     { id: "TXN-8823", name: "Amit Sharma", amount: "₹850.00", date: "Yesterday", status: "Pending", method: "Cheque" },
     { id: "TXN-8824", name: "Priya Deshmukh", amount: "₹300.00", date: "Yesterday", status: "Success", method: "Online" },
 ];

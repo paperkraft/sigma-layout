@@ -94,7 +94,7 @@ export default function GeneralSettings() {
     };
 
     return (
-        <div className="p-8 space-y-8 animate-in fade-in duration-500 pb-24 text-foreground">
+        <div className="p-8 space-y-8 animate-in fade-in duration-500">
 
             {/* 1. Page Header */}
             <div>

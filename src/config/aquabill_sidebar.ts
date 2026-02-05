@@ -28,17 +28,24 @@ export const aquabillMenuGroups: NavMenuGroup[] = [
                         label: "Billing Config",
                         items: [
                             { title: "General Settings", url: "/configuration/general-settings" },
-                            { title: "Master", url: "/configuration/master" },
-                            { title: "Tariff Config", url: "/configuration/tariff" }
+                            { title: "Master Settings", url: "/configuration/master" },
                         ]
                     },
                     {
-                        label: "Zones",
+                        label: "Tariff Config",
                         items: [
-                            { title: "Manage Zones", url: "/configuration/#" },
-                            { title: "Zone Tags", url: "/configuration/#" }
+                            { title: "Connection Charges", url: "/configuration/charges" },
+                            { title: "Tariff", url: "/configuration/tariff" },
+                            { title: "Meter Rent", url: "/configuration/meter-rent" }
                         ]
                     },
+                    // {
+                    //     label: "Zones",
+                    //     items: [
+                    //         { title: "Zone Tags", url: "/configuration/#" },
+                    //         { title: "Manage Zones", url: "/configuration/#" },
+                    //     ]
+                    // },
                     {
                         label: "Payment Settings",
                         items: [
