@@ -1,11 +1,11 @@
 import { NavMenuGroup } from "@/components/layout/nav-sidebar";
-import { BarChart3, CreditCard, Droplets, FileText, Home, Settings, Users } from "lucide-react";
+import { BarChart3, CreditCard, Droplets, FileText, LayoutDashboard, Settings, Users } from "lucide-react";
 
 export const aquabillMenuGroups: NavMenuGroup[] = [
     {
         label: "Overview",
         items: [
-            { title: "Dashboard", icon: Home, url: "/dashboard" },
+            { title: "Dashboard", icon: LayoutDashboard, url: "/dashboard" },
         ],
     },
     {

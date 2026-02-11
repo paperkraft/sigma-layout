@@ -1,11 +1,17 @@
 'use client'
+
 import {
-    AlertCircle, ArrowRight, FileText, MoreHorizontal, Plus, TrendingDown, TrendingUp, Users, Wallet
+    AlertCircle, FileText, MoreHorizontal, Plus, TrendingUp, Users, Wallet
 } from 'lucide-react';
-import React from 'react';
 import {
     Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from 'recharts';
+
+import { PageHeader } from '@/components/shared/page-header';
+import { Button } from '@/components/ui/button';
+
+import { SectionHeader } from './sub-components/SectionHeader';
+import { StatCard } from './sub-components/StatCard';
 
 // --- Mock Data ---
 const revenueData = [
@@ -31,65 +37,20 @@ const alerts = [
     { id: 3, type: "info", message: "New tariff rates applied successfully", time: "1d ago" },
 ];
 
-// --- Sub-Components ---
-
-const StatCard = ({ title, value, trend, trendValue, icon: Icon, trendUp }: any) => (
-    <div className="p-6 rounded-xl border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
-        <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
-            <div className="p-2 bg-secondary rounded-lg">
-                <Icon className="h-5 w-5 text-foreground" />
-            </div>
-        </div>
-        <div className="flex items-baseline space-x-2">
-            <h2 className="text-3xl font-bold text-foreground">{value}</h2>
-            <span className={`flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${trendUp
-                ? 'bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-400'
-                : 'bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400'
-                }`}>
-                {trendUp ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
-                {trendValue}
-            </span>
-        </div>
-        <p className="text-xs text-muted-foreground mt-2">{trend}</p>
-    </div>
-);
-
-const SectionHeader = ({ title, action }: any) => (
-    <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-foreground">{title}</h2>
-        {action && (
-            <button className="text-sm text-primary hover:text-primary/80 font-medium flex items-center transition-colors">
-                {action} <ArrowRight className="ml-1 h-4 w-4" />
-            </button>
-        )}
-    </div>
-);
-
-export default function DashboardHome() {
+export default function Dashboard() {
     return (
-        <div className="max-w-400 mx-auto p-6 md:p-8 space-y-8 animate-in fade-in duration-500 text-foreground">
+        <div className="max-w-screen-2xl mx-auto p-4 md:p-7 space-y-4">
 
-            {/* 1. Header & Quick Actions */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-foreground tracking-tight">Dashboard</h1>
-                    <p className="text-muted-foreground text-sm mt-1">Overview of your billing operations and network status.</p>
+            {/* Header & Quick Actions */}
+            <PageHeader title={'Dashboard'} description={'Overview of your billing operations and network status.'}>
+                <div className="flex flex-wrap gap-4">
+                    <Button variant={'outline'}><FileText className="size-4" />Generate Report</Button>
+                    <Button><Plus className="size-4" />New Connection</Button>
                 </div>
-                <div className="flex gap-3">
-                    <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-foreground bg-card border border-border rounded-lg hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-sm transition-all">
-                        <FileText className="h-4 w-4 mr-2" />
-                        Generate Report
-                    </button>
-                    <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-sm transition-all">
-                        <Plus className="h-4 w-4 mr-2" />
-                        New Connection
-                    </button>
-                </div>
-            </div>
+            </PageHeader>
 
-            {/* 2. Key Performance Indicators (KPIs) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Key Performance Indicators (KPIs) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard
                     title="Total Revenue"
                     value="₹4,23,050"
@@ -124,11 +85,11 @@ export default function DashboardHome() {
                 />
             </div>
 
-            {/* 3. Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
                 {/* Left Column: Analytics (Span 2) */}
-                <div className="lg:col-span-2 space-y-8">
+                <div className="lg:col-span-2 space-y-4">
 
                     {/* Revenue Chart */}
                     <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
@@ -146,7 +107,6 @@ export default function DashboardHome() {
                                             <stop offset="95%" stopColor="#64748b" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
-                                    {/* Updated Grid Color for Dark Mode */}
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} dy={10} />
                                     <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} />
@@ -220,12 +180,12 @@ export default function DashboardHome() {
                 </div>
 
                 {/* Right Column: Alerts & Quick Actions (Span 1) */}
-                <div className="space-y-6">
+                <div className="space-y-4">
 
                     {/* Operational Alerts */}
                     <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
                         <h3 className="font-semibold text-foreground mb-4 flex items-center">
-                            <AlertCircle className="h-4 w-4 mr-2 text-primary" />
+                            <AlertCircle className="size-4 mr-2 text-primary" />
                             Operational Alerts
                         </h3>
                         <div className="space-y-4">
@@ -246,11 +206,10 @@ export default function DashboardHome() {
                         </button>
                     </div>
 
-                    {/* Quick Actions Grid (Kept dark violet brand color even in light mode) */}
-                    <div className="bg-violet-900 p-6 rounded-xl shadow-lg text-white">
+                    {/* Quick Actions Grid */}
+                    <div className="bg-primary/80 p-5 rounded-xl shadow-lg text-white">
                         <h3 className="font-semibold mb-4 text-violet-100">Quick Actions</h3>
                         <div className="grid grid-cols-2 gap-3">
-                            {/* Buttons use white/10 for transparency, works on the dark violet background */}
                             <button className="p-3 bg-white/10 hover:bg-white/20 rounded-lg text-left transition-colors">
                                 <Wallet className="h-5 w-5 mb-2 text-violet-200" />
                                 <span className="text-xs font-medium block">Record Payment</span>
@@ -271,7 +230,7 @@ export default function DashboardHome() {
                     </div>
 
                     {/* Mini Zone Stat */}
-                    <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
+                    <div className="bg-card p-5 rounded-xl border border-border shadow-sm">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-sm font-medium text-muted-foreground">Zone Performance</h3>
                             <span className="text-xs text-green-600 dark:text-green-400 font-medium">+5%</span>

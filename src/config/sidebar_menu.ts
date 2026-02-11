@@ -1,14 +1,14 @@
 import { NavMenuGroup } from "@/components/layout/nav-sidebar";
-import { FolderKanban, LayoutDashboard, MessagesSquare, Share2, Wallet } from "lucide-react";
+import { FolderKanban, Home, MessagesSquare, Share2, Wallet } from "lucide-react";
 
 export const sidebarMenuGroups: NavMenuGroup[] = [
     {
         label: "Overview",
         items: [
             {
-                title: "Dashboard",
+                title: "Home",
                 url: "/dashboard",
-                icon: LayoutDashboard,
+                icon: Home,
                 exact: true,
             },
         ],

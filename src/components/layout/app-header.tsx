@@ -44,21 +44,24 @@ export const Header = ({
           )}
 
           {isWorkbench && (
-            <div className="flex flex-col">
-              <span className="text-xs font-bold text-foreground leading-tight truncate max-w-48">
-                {projectName}
-              </span>
-              <span className="text-[10px] text-muted-foreground font-medium truncate max-w-48">
-                {description}
-              </span>
-            </div>
+            <>
+              <div className="h-6 w-px bg-border mx-2" />
+              <div className="flex flex-col">
+                <span className="text-xs font-bold text-foreground leading-tight truncate max-w-48">
+                  {projectName}
+                </span>
+                <span className="text-[10px] text-muted-foreground font-medium truncate max-w-48">
+                  {description}
+                </span>
+              </div>
+            </>
           )}
         </div>
 
         {isWorkbench && !isMobile && (
           <>
             <div className="h-4 w-px bg-border mx-2" />
-            <nav className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
+            <nav className="h-14 flex items-center gap-4 text-xs font-medium text-muted-foreground">
               <span
                 className="hover:text-foreground cursor-pointer transition-colors"
                 onClick={() => handleDashboard()}
