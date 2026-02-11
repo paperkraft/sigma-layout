@@ -10,6 +10,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 import { UserAction } from './app-user-action';
 import { CustomTrigger } from './custom-trigger';
+import Logo from './app-logo';
 
 interface HeaderProps {
   isWorkbench?: boolean;
@@ -34,14 +35,10 @@ export const Header = ({
         {isMobile && (<CustomTrigger />)}
 
         <div className="flex items-center gap-2">
-          {!isMobile && (
-            <div className="size-8 bg-primary rounded flex items-center justify-center text-primary-foreground font-bold text-lg">
-              S
-            </div>
-          )}
+          {!isMobile && (<Logo />)}
 
           {!isWorkbench && (
-            <span className="font-bold text-base text-foreground leading-tight">
+            <span className="hidden font-bold text-base text-foreground leading-tight">
               Sigma ToolBox
             </span>
           )}

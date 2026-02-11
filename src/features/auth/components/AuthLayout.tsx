@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import Logo from "@/components/layout/app-logo";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -70,12 +71,7 @@ export function AuthLayout({
         <div className="w-full max-w-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* Logo */}
           <div className="flex items-center gap-2 mb-8">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl">
-              S
-            </div>
-            <span className="text-xl font-bold text-slate-900">
-              Sigma Toolbox
-            </span>
+            <Logo />
           </div>
 
           {children}
