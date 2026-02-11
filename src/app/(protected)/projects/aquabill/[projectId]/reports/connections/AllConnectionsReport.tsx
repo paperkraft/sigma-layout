@@ -3,11 +3,8 @@ import React, { useState } from 'react';
 import {
     Download,
     Printer,
-    Search,
-    Filter,
     RefreshCw,
     Layout,
-    Settings2,
     ChevronLeft,
     ChevronRight,
     MapPin,
@@ -17,6 +14,12 @@ import {
     Hash,
     Activity
 } from 'lucide-react';
+import { Badge } from '@/components/shared/custom-badge';
+import { PageHeader } from '@/components/shared/page-header';
+import { Button } from '@/components/ui/button';
+import SelectControl from '@/features/projects/aquabill/form-controls/select-control';
+import { billingMethodOptions, connectionOptions, statusOptions, zoneOptions } from '@/config/master_dummy';
+import InputControl from '@/features/projects/aquabill/form-controls/input-control';
 
 // --- Mock Data ---
 const REPORT_DATA = Array.from({ length: 15 }).map((_, i) => ({
@@ -41,114 +44,61 @@ const REPORT_DATA = Array.from({ length: 15 }).map((_, i) => ({
     dateCreated: "12-Jan-2026"
 }));
 
-// --- Components ---
-
-const Button = ({ children, variant = "secondary", size = "default", className, icon: Icon, ...props }: any) => {
-    const variants: Record<string, string> = {
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm",
-        secondary: "bg-card border border-border text-foreground hover:bg-accent hover:text-accent-foreground",
-        ghost: "bg-transparent text-muted-foreground hover:bg-accent hover:text-foreground",
-    };
-    const sizes: Record<string, string> = {
-        sm: "px-3 py-1.5 text-xs",
-        default: "px-4 py-2 text-sm",
-        icon: "p-2"
-    };
-    return (
-        <button className={`inline-flex items-center justify-center font-medium rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary/50 ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
-            {Icon && <Icon className={`h-4 w-4 ${children ? 'mr-2' : ''}`} />}
-            {children}
-        </button>
-    );
-};
-
-const Select = ({ label, options }: any) => (
-    <div className="space-y-1 min-w-30">
-        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{label}</label>
-        <select className="w-full bg-card border border-border text-foreground text-sm rounded-md px-2 py-1.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow">
-            <option>All</option>
-            {options.map((opt: any) => <option key={opt}>{opt}</option>)}
-        </select>
-    </div>
-);
-
-const Badge = ({ children, variant }: any) => {
-    const styles: Record<string, string> = {
-        green: "bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800",
-        blue: "bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-800",
-        slate: "bg-secondary text-muted-foreground border-border",
-        purple: "bg-violet-50 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border-violet-100 dark:border-violet-800",
-        orange: "bg-orange-50 dark:bg-orange-500/20 text-orange-700 dark:text-orange-400 border-orange-100 dark:border-orange-800"
-    };
-    return (
-        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wide ${styles[variant] || styles.slate}`}>
-            {children}
-        </span>
-    );
-};
+const allOption = [{ label: "All", value: "all" }]
 
 export default function AllConnectionsReport() {
     const [isCompact, setIsCompact] = useState(false);
 
     return (
-        <div className="p-6 space-y-6 h-screen flex flex-col text-foreground">
+        <div className="max-w-screen-2xl mx-auto p-4 md:p-7 space-y-4">
 
             {/* 1. Header & Actions */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
-                <div>
-                    <h1 className="text-2xl font-bold text-foreground">Connections Master Report</h1>
-                    <p className="text-muted-foreground text-sm mt-1">Unified view of subscriber data, technical specs, and location details.</p>
+            <PageHeader title={'Connections Master Report'} description={'Unified view of subscriber data, technical specs, and location details.'}>
+                <div className="flex flex-wrap gap-2">
+                    <Button variant="outline"><Printer size={16} />Print</Button>
+                    <Button><Download size={16} />Export Data</Button>
                 </div>
-                <div className="flex gap-2">
-                    <Button variant="secondary" icon={Printer}>Print</Button>
-                    <Button variant="primary" icon={Download}>Export Data</Button>
-                </div>
-            </div>
+            </PageHeader>
 
             {/* 2. Filter Bar */}
             <div className="bg-card border border-border rounded-xl shadow-sm p-4 shrink-0">
                 <div className="flex flex-col lg:flex-row gap-4 items-end">
                     <div className="flex-1 overflow-x-auto pb-2 lg:pb-0 w-full">
-                        <div className="flex gap-3 min-w-max">
-                            <Select label="Billing Method" options={["Flat Rate", "Metered"]} />
-                            <Select label="Conn Type" options={["Domestic", "Commercial"]} />
-                            <Select label="Zone" options={["North-West", "West-East"]} />
-                            <Select label="Status" options={["Active", "Disconnected"]} />
-                            <Select label="Migrated" options={["Yes", "No"]} />
+                        <div className="flex gap-3 min-w-max p-1">
+                            <SelectControl value={'all'} onChange={(v) => { console.log(v) }} name='method' label="Billing Method" options={[...allOption, ...billingMethodOptions]} />
+                            <SelectControl value={'all'} onChange={(v) => { console.log(v) }} name='type' label="Conn Type" options={[...allOption, ...connectionOptions]} />
+                            <SelectControl value={'all'} onChange={(v) => { console.log(v) }} name='zone' label="Zone" options={[...allOption, ...zoneOptions]} />
+                            <SelectControl value={'all'} onChange={(v) => { console.log(v) }} name='status' label="Status" options={[...allOption, ...statusOptions]} />
                         </div>
                     </div>
-                    <div className="flex gap-2 w-full lg:w-auto shrink-0">
-                        <Button variant="secondary" icon={RefreshCw} className="px-3" />
-                        <div className="relative w-64">
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                className="w-full pl-9 pr-4 py-2 bg-secondary/30 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground placeholder:text-muted-foreground"
-                            />
-                            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                        </div>
+                    <div className="flex gap-2 w-full lg:w-auto shrink-0 p-1">
+                        <Button variant="outline" size={'icon'}><RefreshCw /></Button>
+                        <InputControl
+                            search
+                            name='search'
+                            placeholder='Search...'
+                            value={''}
+                            onChange={(v) => console.log(v)}
+                            className='w-64'
+                        />
                     </div>
                 </div>
             </div>
 
             {/* 3. Grouped Data Grid */}
-            <div className="bg-card border border-border rounded-xl shadow-sm flex-1 flex flex-col overflow-hidden relative">
+            <div className="bg-card border border-border rounded-xl h-[calc(100vh-300px)] shadow-sm flex-1 flex flex-col overflow-hidden relative">
 
                 {/* Toolbar */}
                 <div className="px-4 py-2 border-b border-border bg-muted/30 flex justify-between items-center shrink-0">
                     <div className="text-xs text-muted-foreground font-medium">1,240 Total Connections</div>
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => setIsCompact(!isCompact)}
-                            className={`p-1.5 rounded hover:bg-secondary transition-colors ${isCompact ? 'text-primary bg-primary/10' : 'text-muted-foreground'}`}
-                            title="Compact View"
-                        >
-                            <Layout className="h-4 w-4" />
-                        </button>
-                        <button className="flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-muted-foreground hover:bg-secondary rounded border border-border bg-card">
-                            <Settings2 className="h-3.5 w-3.5" /> Columns
-                        </button>
-                    </div>
+
+                    <button
+                        onClick={() => setIsCompact(!isCompact)}
+                        className={`p-1.5 rounded hover:bg-secondary transition-colors ${isCompact ? 'text-primary bg-primary/10' : 'text-muted-foreground'}`}
+                        title="Compact View"
+                    >
+                        <Layout className="h-4 w-4" />
+                    </button>
                 </div>
 
                 {/* Table */}
@@ -176,7 +126,7 @@ export default function AllConnectionsReport() {
                                             </span>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <span className="font-mono text-xs text-muted-foreground bg-secondary px-1.5 rounded border border-border">ID: {row.id}</span>
-                                                {row.migrated && <Badge variant="purple">Migrated</Badge>}
+                                                {row.migrated && <Badge variant="secondary">Migrated</Badge>}
                                             </div>
                                             <span className="text-xs text-muted-foreground mt-0.5">App No: {row.appNo}</span>
                                         </div>
@@ -218,11 +168,11 @@ export default function AllConnectionsReport() {
                                     <td className={`px-6 ${isCompact ? 'py-2' : 'py-4'} align-top`}>
                                         <div className="space-y-1">
                                             <div className="flex items-center gap-2">
-                                                <Badge variant="slate">{row.connSize}</Badge>
+                                                <Badge variant="default">{row.connSize}</Badge>
                                                 {row.meterNo ? (
-                                                    <Badge variant="blue">Metered</Badge>
+                                                    <Badge variant="info">Metered</Badge>
                                                 ) : (
-                                                    <Badge variant="orange">Flat</Badge>
+                                                    <Badge variant="warning">Flat</Badge>
                                                 )}
                                             </div>
                                             <div className="text-xs text-muted-foreground mt-1 space-y-0.5">

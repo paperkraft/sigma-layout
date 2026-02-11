@@ -68,8 +68,8 @@ export const ProjectList = () => {
     });
 
     return (
-        <div className="flex h-full" onClick={() => setSelectedId(null)}>
-            <div className="flex-1 flex flex-col min-w-0 z-0 p-6 md:p-8 space-y-4">
+        <div className="flex h-full">
+            <div className="flex-1 flex flex-col min-w-0 z-0 p-6 md:p-8 space-y-4" onClick={() => setSelectedId(null)}>
                 {/* HEADER & ACTIONS */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
@@ -140,7 +140,7 @@ export const ProjectList = () => {
 
                 {/* CONTENT */}
                 <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="flex-1 overflow-y-auto p-1">
+                    <div className="flex-1 overflow-y-auto p-2">
                         {!loading && filteredProjects.length === 0 && (
                             <div className="text-center py-20">
                                 <Search className="mx-auto text-muted-foreground/50 mb-3" />

@@ -5,7 +5,7 @@ import {
 import { useRouter } from 'next/navigation';
 import React, { useCallback } from 'react';
 
-import CustomToolTip from '@/components/shared/CustomToolTip';
+import CustomToolTip from '@/components/shared/custom-tooltip';
 import { toast } from 'sonner';
 
 interface PanelProps {

@@ -41,7 +41,7 @@ const layout = async ({ children, params }: LayoutProps) => {
 
                 <div className="flex flex-1">
                     <AquabillSidebar className="top-14" />
-                    <main className={cn("w-full flex-1 bg-gray-50 dark:bg-background transition-colors duration-300")}>
+                    <main className={cn("flex-1 min-w-0 overflow-x-hidden bg-gray-50 dark:bg-background transition-colors duration-300")}>
                         {children}
                     </main>
                 </div>

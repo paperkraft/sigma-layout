@@ -2,12 +2,12 @@
 import { Bell, Building2, CreditCard, Shield, User } from 'lucide-react';
 import React, { useState } from 'react';
 
-import BillingSettings from './components/BillingSettings';
-import MyProfileView from './components/MyProfileView';
-import { NavButton } from './components/NavButton';
-import NotificationSettings from './components/NotificationSettings';
-import OrganizationSettings from './components/OrganizationSettings';
-import SecuritySettings from './components/SecuritySettings';
+import BillingSettings from './sub-components/BillingSettings';
+import MyProfileView from './sub-components/MyProfileView';
+import { NavButton } from './sub-components/NavButton';
+import NotificationSettings from './sub-components/NotificationSettings';
+import OrganizationSettings from './sub-components/OrganizationSettings';
+import SecuritySettings from './sub-components/SecuritySettings';
 
 export default function ProfileSettings() {
     const [activeTab, setActiveTab] = useState("profile");

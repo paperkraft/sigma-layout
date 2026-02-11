@@ -1,7 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 
 import { DUMMY_PROJECTS, getProjectMetadata } from '@/config/project_dummy';
-import { Placeholder } from '@/components/shared/Placeholder';
 
 type PageProps = {
     params: Promise<{
@@ -22,6 +21,4 @@ export default async function Page({ params }: PageProps) {
     }
 
     return redirect(`${projectId}/dashboard`);
-    // return (<Placeholder title={project.name} description={project.description!} />);
 }
-

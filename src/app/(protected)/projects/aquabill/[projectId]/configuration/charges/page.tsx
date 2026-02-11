@@ -1,9 +1,5 @@
-import ConnectionChargesScreen from "./ConnectionCharges";
+import ConnectionCharges from "./Connection";
 
 export default function Page() {
-    return (
-        <>
-            <ConnectionChargesScreen />
-        </>
-    );
+    return <ConnectionCharges />
 }

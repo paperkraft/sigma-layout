@@ -1,4 +1,4 @@
-import CustomToolTip from "@/components/shared/CustomToolTip";
+import CustomToolTip from "@/components/shared/custom-tooltip";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Clock, ExternalLink, GitFork, ReceiptIndianRupee } from "lucide-react";
