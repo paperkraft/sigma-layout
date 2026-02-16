@@ -18,8 +18,8 @@ export function DataTableSearch<TData>({ table, reset }: DataTableSearchProps<TD
     }
 
     return (
-        <div className="relative w-full max-w-sm">
-            <span className="absolute left-3 top-2.5 text-muted-foreground text-sm"><Search size={16} /></span>
+        <div className="relative w-full max-w-sm p-1">
+            <span className="absolute left-3 top-3.5 text-muted-foreground text-sm"><Search size={16} /></span>
             <Input
                 className="pl-8"
                 placeholder="Search"

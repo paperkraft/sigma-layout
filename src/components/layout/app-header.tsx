@@ -30,18 +30,12 @@ export const Header = ({
   const isMobile = useIsMobile();
 
   return (
-    <header className="h-14 w-full bg-background dark:bg-popover border-b border-border flex items-center justify-between px-3 shrink-0 transition-colors duration-300">
+    <header className="h-14 w-full bg-popover border-b border-border flex items-center justify-between px-3 shrink-0 transition-colors duration-300">
       <div className="flex items-center gap-2">
         {isMobile && (<CustomTrigger />)}
 
         <div className="flex items-center gap-2">
           {!isMobile && (<Logo />)}
-
-          {!isWorkbench && (
-            <span className="hidden font-bold text-base text-foreground leading-tight">
-              Sigma ToolBox
-            </span>
-          )}
 
           {isWorkbench && (
             <>

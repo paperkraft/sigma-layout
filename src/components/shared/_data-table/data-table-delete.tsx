@@ -4,9 +4,9 @@ import { Loader, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-// import { ThemeWrapper } from "@/components/layout/theme-wrapper";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { getDisplayName } from "@/utils";
 
 interface DeleteToolbarProps<TData> {
     table: Table<TData>;
@@ -22,7 +22,7 @@ export default function DeleteRecordDialog<TData>({ table, deleteRecord }: Delet
     const selectedRows = table.getFilteredSelectedRowModel().rows as any[];
     const selectedIds = selectedRows.map((row: any) => +row.original.id);
     const selectedCount = selectedRows.length;
-    const selectedName = selectedCount === 1 ? selectedRows[0].original?.name : null;
+    const selectedName = selectedCount === 1 ? getDisplayName(selectedRows[0].original) : null;
 
     const onDelete = async () => {
 
@@ -73,7 +73,7 @@ export default function DeleteRecordDialog<TData>({ table, deleteRecord }: Delet
                                 records
                             </>
                         )}
-                        &nbsp;from our servers.
+                        &nbsp;from our server.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="gap-2 sm:space-x-0">

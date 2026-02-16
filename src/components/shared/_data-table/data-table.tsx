@@ -1,32 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import {
-    ColumnDef,
-    ColumnPinningState,
-    flexRender,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
-    PaginationState,
-    SortingState,
-    useReactTable,
-    VisibilityState,
-    Column,
-    // Table as TanStackTable,
-} from '@tanstack/react-table';
-import { ArrowDownUp, ArrowDownWideNarrow, ArrowUpNarrowWide } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+    Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import {
+    Column, ColumnDef, ColumnPinningState, flexRender, getCoreRowModel, getFilteredRowModel,
+    getPaginationRowModel, getSortedRowModel, PaginationState, SortingState, useReactTable,
+    VisibilityState
+} from '@tanstack/react-table';
 
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar, ToolbarOptions } from './data-table-toolbar';
@@ -140,11 +124,11 @@ export function DataTable<TData, TValue>({
                     <DataTableToolbar
                         table={table}
                         toolbar={toolbar}
-                        deleteRecord={deleteRecord}
-                        showFilters={showFilters}
-                        setShowFilters={setShowFilters}
                         density={density}
+                        showFilters={showFilters}
+                        deleteRecord={deleteRecord}
                         onDensityChange={setDensity}
+                        setShowFilters={setShowFilters}
                     >
                         {children}
                     </DataTableToolbar>
@@ -170,22 +154,6 @@ export function DataTable<TData, TValue>({
                                                     header.column.columnDef.header,
                                                     header.getContext()
                                                 )}
-                                            {/* {header.isPlaceholder ? null : (
-                                                <div className={cn(
-                                                    "flex items-center gap-2 text-muted-foreground text-xs font-bold uppercase tracking-wider",
-                                                    header.column.getCanSort() && "cursor-pointer select-none",
-                                                )}
-                                                    onClick={header.column.getToggleSortingHandler()}
-                                                >
-                                                    {flexRender(
-                                                        header.column.columnDef.header,
-                                                        header.getContext()
-                                                    )}
-                                                    {header.column.getCanSort() && (
-                                                        renderSortIcon(header.column.getIsSorted())
-                                                    )}
-                                                </div>
-                                            )} */}
                                         </TableHead>
                                     ))}
                                 </TableRow>
@@ -230,13 +198,13 @@ export function DataTable<TData, TValue>({
                                 </TableRow>
                             )}
                             {/* Filler rows to maintain height if needed */}
-                            {table.getPageCount() > 0 && table.getRowModel().rows.length < pagination.pageSize && (
+                            {/* {table.getPageCount() > 0 && table.getRowModel().rows.length < pagination.pageSize && (
                                 <EmptyRows
                                     count={pagination.pageSize - table.getRowModel().rows.length}
                                     colSpan={columns.length}
                                     density={density}
                                 />
-                            )}
+                            )} */}
                         </TableBody>
                     </Table>
                     {pageSize && <div className='mt-auto'><DataTablePagination table={table} /></div>}
@@ -274,12 +242,6 @@ function EmptyRows({ count, colSpan, density }: { count: number, colSpan: number
             ))}
         </>
     )
-}
-
-function renderSortIcon(isSorted: boolean | string) {
-    if (!isSorted) return <ArrowDownUp className="shrink-0 ml-2 size-3 opacity-50" />;
-    if (isSorted === "asc") return <ArrowUpNarrowWide className="shrink-0 ml-2 size-3" />;
-    return <ArrowDownWideNarrow className="shrink-0 ml-2 size-3" />;
 }
 
 function getDensityPadding(density: DensityState) {
