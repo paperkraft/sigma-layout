@@ -3,9 +3,10 @@ import { ReactNode } from "react";
 interface BadgeProps {
     children: ReactNode;
     variant: 'success' | 'info' | 'default' | 'secondary' | 'warning';
+    className?: string;
 }
 
-export const Badge = ({ children, variant }: BadgeProps) => {
+export const Badge = ({ children, variant, className }: BadgeProps) => {
     const styles: Record<string, string> = {
         default: "bg-secondary text-muted-foreground border-border",
         secondary: "bg-violet-50 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border-violet-100 dark:border-violet-800",
@@ -15,7 +16,7 @@ export const Badge = ({ children, variant }: BadgeProps) => {
     };
 
     return (
-        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wide ${styles[variant] || styles.default}`}>
+        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wide ${styles[variant] || styles.default} ${className || ''}`}>
             {children}
         </span>
     );

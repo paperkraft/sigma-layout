@@ -1,3 +1,4 @@
+export const allOption = [{ label: 'All', value: 'all' }];
 export const sizeOptions = [
     { label: '0.5 Inch', value: '0.5' },
     { label: '0.75 Inch', value: '0.75' },

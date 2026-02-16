@@ -74,21 +74,23 @@ export const RightPanel = ({
 
           {/* Content */}
           <div className="flex-1 overflow-y-auto p-5 animate-in fade-in duration-300 space-y-5">
-            <div>
-              <h6 className="text-[11px] font-semibold mb-2 uppercase tracking-wider text-muted-foreground">
-                Network Preview
-              </h6>
+            {activeProject.type === 'waterlab' && (
+              <div>
+                <h6 className="text-[11px] font-semibold mb-2 uppercase tracking-wider text-muted-foreground">
+                  Network Preview
+                </h6>
 
-              {/* Thumbnail */}
-              <div className="relative w-full h-48 bg-muted animate-pulse rounded-md flex items-center justify-center border border-border">
-                <div className="flex flex-col items-center gap-2">
-                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">
-                    Loading preview…
-                  </span>
+                {/* Thumbnail */}
+                <div className="relative w-full h-48 bg-muted animate-pulse rounded-md flex items-center justify-center border border-border">
+                  <div className="flex flex-col items-center gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">
+                      Loading preview…
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Details */}
             <div>

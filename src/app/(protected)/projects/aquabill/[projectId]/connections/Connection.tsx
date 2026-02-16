@@ -5,6 +5,7 @@ import {
     User, XCircle
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { ConnectionColumns } from './module-list-column';
 
 // --- Mock Data ---
 const MOCK_CONNECTIONS = [
@@ -56,6 +57,17 @@ const MOCK_CONNECTIONS = [
         id: "10001118",
         name: "Rahul Deshmukh",
         mobile: "7776665544",
+        method: "Flat",
+        size: "0.5 Inch",
+        type: "Domestic",
+        zone: "South-Block",
+        zoneTag: "Tag C",
+        status: "Disconnected"
+    },
+    {
+        id: "10001119",
+        name: "Shushant Jadhav",
+        mobile: "7776665566",
         method: "Flat",
         size: "0.5 Inch",
         type: "Domestic",
@@ -118,6 +130,8 @@ const Badge = ({ status }: any) => {
 export default function ConnectionsPage() {
     const [selectedRows, setSelectedRows] = useState<any>([]);
     const [activeActionRow, setActiveActionRow] = useState<any>(null);
+
+    const { columns } = ConnectionColumns();
 
     const toggleRow = (id: any) => {
         if (selectedRows.includes(id)) {
