@@ -41,10 +41,9 @@ export const AllConnectionReportColumns = () => {
     const columns: ColumnDef<AllConnectionProps>[] = useMemo(() => [
         {
             id: "select",
-            size: 40,      // Default width
-            minSize: 40,   // Prevent it from getting smaller
-            maxSize: 40,   // Prevent it from getting larger
-            enableResizing: false, // Optional: Stop user from dragging to resize this specific column
+            size: 40,
+            maxSize: 40,
+            enableResizing: false,
             header: ({ table }) => (
                 <CustomCheckbox
                     checked={
@@ -111,6 +110,8 @@ export const AllConnectionReportColumns = () => {
         },
         {
             accessorKey: "billCycle",
+            minSize: 40,
+            maxSize: 120,
             header: ({ column }) => <DataTableColumnHeader column={column} title="Billing Config" />,
             cell: ({ row }) => {
                 const { billCycle, connType } = row.original;
@@ -181,10 +182,8 @@ export const AllConnectionReportColumns = () => {
         {
             accessorKey: "status",
             enableSorting: false,
-            size: 70,
             minSize: 40,
             maxSize: 80,
-            // enableResizing: false,
             header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
             cell: ({ row }) => {
                 const { status } = row.original;

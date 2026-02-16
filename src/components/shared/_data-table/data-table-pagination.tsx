@@ -9,7 +9,7 @@ interface DataTablePaginationProps<TData> {
     pageSizeOptions?: number[]
 }
 
-export function DataTablePagination<TData>({ table, pageSizeOptions = [5, 10, 20, 25, 50, 100] }: DataTablePaginationProps<TData>) {
+export function DataTablePagination<TData>({ table, pageSizeOptions = [5, 10, 15, 20, 25, 50, 100] }: DataTablePaginationProps<TData>) {
     return (
         <div className="z-10 flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto py-2 px-4 sm:flex-row sm:gap-8 border-t shadow-[0_-4px_6px_rgba(0,0,0,0.05)]">
             <div className="text-xs select-none">

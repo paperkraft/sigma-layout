@@ -6,10 +6,10 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Table } from '@tanstack/react-table';
 
+import { DensityState } from './data-table';
 import DeleteRecordDialog from './data-table-delete';
 import { DataTableExport } from './data-table-export';
 import { DataTableSearch } from './data-table-search';
-import { DensityState } from './data-table';
 import { DataTableViewOptions } from './data-table-view-options';
 
 const ALLOWED_TOOLBARS = ["export", "density", "columns"] as const;
@@ -47,7 +47,7 @@ export function DataTableToolbar<TData>({ children, table, deleteRecord, density
 
     return (
         <>
-            <div className="flex flex-col p-4 pb-1 gap-2 border-b">
+            <div className="flex flex-col p-4 pb-2 md:pb-1 gap-2 border-b ">
                 {showFilters && children}
 
                 <div className="flex items-center gap-1 justify-between">
@@ -58,9 +58,9 @@ export function DataTableToolbar<TData>({ children, table, deleteRecord, density
                         </div>
                     )}
 
-                    {isSelectionEnabled && !hasSelectedRows && <span className="text-xs text-muted-foreground italic pl-1">Select rows to perform bulk actions</span>}
+                    {isSelectionEnabled && !hasSelectedRows && <span className="text-xs text-muted-foreground italic pl-1 hidden md:block">Select rows to perform bulk actions</span>}
 
-                    <div className="flex items-center gap-1 justify-end">
+                    <div className="flex items-center gap-1 justify-end overflow-auto">
                         <DataTableSearch table={table} />
                         <Button variant="ghost" size="sm" onClick={toggleFilters} aria-label="toggle filters" className="text-muted-foreground text-xs">
                             {showFilters ? <FilterX /> : <Filter />}

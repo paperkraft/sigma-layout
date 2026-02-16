@@ -64,7 +64,7 @@ export default function DeleteRecordDialog<TData>({ table, deleteRecord }: Delet
                 <DialogHeader>
                     <DialogTitle>Are you absolutely sure?</DialogTitle>
                     <DialogDescription>
-                        This action cannot be undone. This will permanently delete your&nbsp;
+                        This action cannot be undone. This will permanently delete &nbsp;
                         {selectedCount === 1 ? (
                             <span className="font-medium">"{selectedName}"</span>
                         ) : (

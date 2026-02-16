@@ -21,6 +21,7 @@ import {
     SidebarRail
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from '../ui/scroll-area';
 
 // --- Generic Types ---
 export interface NavMenuItem {
@@ -44,26 +45,28 @@ interface NavSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function NavSidebar({ groups, footerContent, ...props }: NavSidebarProps) {
     return (
         <Sidebar collapsible="icon" {...props}>
-            <SidebarContent className="bg-background dark:bg-popover">
-                {groups.map((group, idx) => (
-                    <SidebarGroup key={group.label || idx}>
-                        {group.label && (
-                            <SidebarGroupLabel>
-                                {group.label}
-                            </SidebarGroupLabel>
-                        )}
-                        <SidebarGroupContent>
-                            <SidebarMenu>
-                                {group.items.map((menu) => (
-                                    <SidebarItemResolver key={menu.title} item={menu} />
-                                ))}
-                            </SidebarMenu>
-                        </SidebarGroupContent>
-                    </SidebarGroup>
-                ))}
+            <SidebarContent className="bg-card">
+                <ScrollArea className="h-full">
+                    {groups.map((group, idx) => (
+                        <SidebarGroup key={group.label || idx}>
+                            {group.label && (
+                                <SidebarGroupLabel>
+                                    {group.label}
+                                </SidebarGroupLabel>
+                            )}
+                            <SidebarGroupContent>
+                                <SidebarMenu>
+                                    {group.items.map((menu) => (
+                                        <SidebarItemResolver key={menu.title} item={menu} />
+                                    ))}
+                                </SidebarMenu>
+                            </SidebarGroupContent>
+                        </SidebarGroup>
+                    ))}
+                </ScrollArea>
             </SidebarContent>
 
-            <SidebarFooter className="bg-background dark:bg-popover md:mb-14">
+            <SidebarFooter className="bg-card md:mb-14">
                 {footerContent ? footerContent : (
                     <SidebarMenu>
                         <SidebarMenuItem>

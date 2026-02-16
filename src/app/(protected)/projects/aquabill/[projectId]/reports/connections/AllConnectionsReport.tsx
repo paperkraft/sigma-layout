@@ -90,11 +90,12 @@ export default function AllConnectionsReport() {
                 className="lg:h-[calc(100vh-184px)] overflow-hidden"
             // initialPinning={{ left: ["select", "firstName"] }}
             >
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 min-w-max p-1 pb-2 border-b">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 w-full p-1 pb-2 border-b">
                     <SelectControl label_bg='bg-card' value={filters.method} onChange={(v) => setFilters({ ...filters, method: v })} name='method' label="Billing Method" options={[...allOption, ...billingMethodOptions]} />
                     <SelectControl label_bg='bg-card' value={filters.type} onChange={(v) => setFilters({ ...filters, type: v })} name='type' label="Conn Type" options={[...allOption, ...connectionOptions]} />
                     <SelectControl label_bg='bg-card' value={filters.zone} onChange={(v) => setFilters({ ...filters, zone: v })} name='zone' label="Zone" options={[...allOption, ...zoneOptions]} />
-                    <SelectControl label_bg='bg-card' value={filters.status} onChange={(v) => setFilters({ ...filters, status: v })} name='status' label="Status" options={[...allOption, ...statusOptions]} />
+                    {/* <SelectControl label_bg='bg-card' value={filters.status} onChange={(v) => setFilters({ ...filters, status: v })} name='status' label="Status" options={[...allOption, ...statusOptions]} /> */}
+                    <InputControl label_bg='bg-card' value={filters.status} onChange={(v) => setFilters({ ...filters, status: String(v) })} name='status' label="Status" />
                     <div className='mt-auto'>
                         <Button variant="ghost" size="sm" onClick={resetAllFilters} aria-label="reset" className="text-muted-foreground text-xs">
                             <RefreshCcw /> Reset
