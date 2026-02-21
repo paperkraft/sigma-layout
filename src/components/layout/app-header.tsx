@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from 'lucide-react';
+import { Maximize, Minimize, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -11,6 +11,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { UserAction } from './app-user-action';
 import { CustomTrigger } from './custom-trigger';
 import Logo from './app-logo';
+import { useFullscreen } from '@/hooks/use-fullscreen';
+import { useMount } from '@/hooks/use-mount';
 
 interface HeaderProps {
   isWorkbench?: boolean;
@@ -23,11 +25,20 @@ export const Header = ({
   projectName,
   description,
 }: HeaderProps) => {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const route = useRouter();
+  const isMobile = useIsMobile();
+  const { isFullscreen, toggle } = useFullscreen();
+
+  const isMounted = useMount();
+
   const handleBack = () => route.replace("/projects");
   const handleDashboard = () => route.replace("/dashboard");
-  const isMobile = useIsMobile();
+
+  if (!isMounted) return null;
+
+  const isDark = resolvedTheme === "dark";
+
 
   return (
     <header className="h-14 w-full bg-popover border-b border-border flex items-center justify-between px-3 shrink-0 transition-colors duration-300">
@@ -78,15 +89,23 @@ export const Header = ({
 
       <div className="flex items-center gap-2">
         {!isMobile && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          >
-            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Toggle theme</span>
-          </Button>
+          <>
+            <Button variant="ghost" size="icon" onClick={() => toggle()} aria-label='toggle fullscreen'>
+              {isFullscreen ? <Minimize className="size-4" /> : <Maximize className="size-4" />}
+              <span className="sr-only">Toggle fullscreen</span>
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(isDark ? "light" : "dark")}
+              aria-label='toggle theme'
+            >
+              <Sun className="size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+          </>
         )}
         <UserAction />
       </div>
