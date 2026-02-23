@@ -8,20 +8,71 @@ import { Eye, EyeOff, ArrowRight, Github } from "lucide-react";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import { useRouter } from "next/navigation";
 
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { base_url } from "@/config/base_url";
+import { toast } from "sonner";
+
+const signInSchema = z.object({
+  emailId: z.string().email("Enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  remember: z.boolean().optional(),
+});
+
+type SignInFormValues = z.infer<typeof signInSchema>;
+
+
 export default function SignInPage() {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      router.replace("/dashboard");
-    }, 2000);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInFormValues>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      remember: false,
+    },
+  });
+
+  const onSubmit = async (data: SignInFormValues) => {
+    const { remember, ...rest } = data;
+    try {
+      setApiError("");
+
+      const res = await fetch(`${base_url}/api/User/login`, {
+        method: "POST",
+        // credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(rest),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || "Login failed");
+      }
+
+      if (!result.isSuccess) {
+        toast.error(result.resMsg)
+      }
+
+      if (result.isSuccess) {
+        // success
+        router.replace("/dashboard");
+      }
+
+    } catch (error: any) {
+      setApiError(error.message);
+    }
   };
 
   return (
@@ -67,7 +118,7 @@ export default function SignInPage() {
       </div>
 
       {/* Login Form */}
-      <form onSubmit={handleLogin} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div className="space-y-1.5">
           <label
             className="text-xs font-semibold text-slate-700 uppercase"
@@ -76,12 +127,16 @@ export default function SignInPage() {
             Email
           </label>
           <Input
-            id="email"
+            // id="email"
             type="email"
+            {...register("emailId")}
             placeholder="name@company.com"
             className="h-11 bg-slate-50 border-slate-200 focus:bg-white transition-all"
             required
           />
+          {errors.emailId && (
+            <p className="text-xs text-red-500">{errors.emailId.message}</p>
+          )}
         </div>
 
         <div className="space-y-1.5">
@@ -101,8 +156,9 @@ export default function SignInPage() {
           </div>
           <div className="relative">
             <Input
-              id="password"
+              // id="password"
               type={showPassword ? "text" : "password"}
+              {...register("password")}
               placeholder="••••••••"
               className="h-11 bg-slate-50 border-slate-200 focus:bg-white transition-all pr-10"
               required
@@ -115,12 +171,15 @@ export default function SignInPage() {
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
+          {errors.password && (
+            <p className="text-xs text-red-500">{errors.password.message}</p>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
-            id="remember"
+            {...register("remember")}
             className="rounded border-gray-300 text-primary focus:ring-primary"
           />
           <label
@@ -133,10 +192,10 @@ export default function SignInPage() {
 
         <Button
           type="submit"
-          disabled={isLoading}
+          disabled={isSubmitting}
           className="w-full h-11 bg-primary hover:bg-primary text-base font-medium shadow-md hover:shadow-lg transition-all"
         >
-          {isLoading ? (
+          {isSubmitting ? (
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               Signing in...

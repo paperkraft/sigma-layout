@@ -5,7 +5,7 @@ import ProjectList from '@/features/projects/ProjectList';
 
 export const metadata: Metadata = {
     title: {
-        default: "Projects",
+        default: "My Projects",
         template: "%s | Sigma Toolbox",
     },
     description: "Projects",

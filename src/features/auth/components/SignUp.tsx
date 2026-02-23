@@ -8,19 +8,65 @@ import { Eye, EyeOff } from "lucide-react";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import { useRouter } from "next/navigation";
 
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+/* ------------------ */
+/* Validation Schema  */
+/* ------------------ */
+
+const signupSchema = z.object({
+  firstName: z.string().min(2, "First name must be at least 2 characters"),
+  lastName: z.string().min(2, "Last name must be at least 2 characters"),
+  email: z.string().email("Enter a valid email address"),
+  mobile: z
+    .string()
+    .min(8, "Enter a valid mobile number")
+    .regex(/^[0-9]+$/, "Mobile number must contain only digits"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters"),
+  terms: z.boolean().refine((val) => val === true, {
+    message: "You must accept the terms",
+  }),
+});
+
+type SignupFormValues = z.infer<typeof signupSchema>;
+
 export default function SignUpPage() {
   const router = useRouter();
-
   const [showPass, setShowPass] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      router.replace("/auth/verify-email");
-    }, 2000);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      terms: false
+    }
+  });
+
+  const onSubmit = async (data: SignupFormValues) => {
+    const payload = {
+      ...data,
+      "countryName": "India",
+      "countryCode": "+91",
+      "roleId": "8f6b9c1e-5d6f-4f9e-9a4a-1b2c3d4e5f07",
+      "invitedProjectId": null,
+      "userTypeId": null,
+      "organizationId": null,
+      "changeForgotPasswordFlag": false,
+      "gender": 1
+    }
+
+    console.log(payload);
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    router.replace("/auth/verify-email");
   };
 
   return (
@@ -39,53 +85,80 @@ export default function SignUpPage() {
         </p>
       </div>
 
-      <form onSubmit={handleSignup} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
+        {/* First + Last Name */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700 uppercase">
-              First Name
-            </label>
+          <div>
             <Input
               placeholder="First Name"
+              {...register("firstName")}
+              maxLength={20}
               className="bg-slate-50 border-slate-200"
-              required
             />
+            {errors.firstName && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.firstName.message}
+              </p>
+            )}
           </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700 uppercase">
-              Last Name
-            </label>
+
+          <div>
             <Input
               placeholder="Last Name"
+              {...register("lastName")}
+              maxLength={20}
               className="bg-slate-50 border-slate-200"
-              required
             />
+            {errors.lastName && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.lastName.message}
+              </p>
+            )}
           </div>
         </div>
 
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700 uppercase">
-            Work Email
-          </label>
-          <Input
-            type="email"
-            placeholder="name@company.com"
-            className="bg-slate-50 border-slate-200"
-            required
-          />
+        {/* Email + Mobile */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Input
+              type="email"
+              placeholder="name@company.com"
+              {...register("email")}
+              className="bg-slate-50 border-slate-200"
+            />
+            {errors.email && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <Input
+              type="tel"
+              placeholder="8888XXXXXXX"
+              {...register("mobile")}
+              maxLength={10}
+              className="bg-slate-50 border-slate-200"
+            />
+            {errors.mobile && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.mobile.message}
+              </p>
+            )}
+          </div>
         </div>
 
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700 uppercase">
-            Password
-          </label>
+        {/* Password */}
+        <div>
           <div className="relative">
             <Input
               type={showPass ? "text" : "password"}
               placeholder="Create a password"
+              {...register("password")}
+              maxLength={20}
               className="bg-slate-50 border-slate-200 pr-10"
-              required
-              minLength={8}
             />
             <button
               type="button"
@@ -95,34 +168,44 @@ export default function SignUpPage() {
               {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
-          <p className="text-[10px] text-slate-400">
-            Must be at least 8 characters
-          </p>
+          {errors.password && (
+            <p className="text-xs text-red-500 mt-1">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
-        {/* Terms Checkbox */}
+        {/* Terms */}
         <div className="flex items-start gap-3 pt-2">
           <input
             type="checkbox"
-            id="terms"
+            {...register("terms")}
             className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
-            required
           />
-          <label
-            htmlFor="terms"
-            className="text-xs text-slate-500 leading-relaxed"
-          >
-            I agree to the&nbsp;<Link href="#" className="text-primary hover:underline">Terms of Service</Link>&nbsp; and&nbsp;
-            <Link href="#" className="text-primary hover:underline">Privacy Policy</Link>. I consent to receive product updates.
+          <label className="text-xs text-slate-500 leading-relaxed">
+            I agree to the{" "}
+            <Link href="#" className="text-primary hover:underline">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link href="#" className="text-primary hover:underline">
+              Privacy Policy
+            </Link>
           </label>
         </div>
+        {errors.terms && (
+          <p className="text-xs text-red-500">
+            {errors.terms.message}
+          </p>
+        )}
 
+        {/* Submit */}
         <Button
           type="submit"
-          disabled={isLoading}
+          disabled={isSubmitting}
           className="w-full h-11 shadow-md"
         >
-          {isLoading ? "Creating Account..." : "Get Started"}
+          {isSubmitting ? "Creating Account..." : "Get Started"}
         </Button>
       </form>
 

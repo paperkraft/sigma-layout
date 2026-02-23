@@ -67,17 +67,17 @@ export const Header = ({
           <>
             <div className="h-4 w-px bg-border mx-2" />
             <nav className="h-14 flex items-center gap-4 text-xs font-medium text-muted-foreground">
-              <span
+              {/* <span
                 className="hover:text-foreground cursor-pointer transition-colors"
                 onClick={() => handleDashboard()}
               >
                 Home
-              </span>
+              </span> */}
               <span
                 className="hover:text-foreground cursor-pointer transition-colors"
                 onClick={() => handleBack()}
               >
-                Projects
+                My Projects
               </span>
               <span className="text-primary border-b-2 border-primary pb-3.5 mt-3.5 cursor-pointer">
                 Workbench

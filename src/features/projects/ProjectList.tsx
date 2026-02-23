@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { GridCard } from './components/GridCards';
 import { ListRow } from './components/ListRow';
 import { RightPanel } from './components/RightPanel';
+import { PageHeader } from '@/components/shared/page-header';
 
 export const ProjectList = () => {
     const router = useRouter();
@@ -71,13 +72,9 @@ export const ProjectList = () => {
         <div className="flex h-full">
             <div className="flex-1 flex flex-col min-w-0 z-0 p-6 md:p-8 space-y-4" onClick={() => setSelectedId(null)}>
                 {/* HEADER & ACTIONS */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-foreground">Projects</h1>
-                        <p className="text-muted-foreground text-sm mt-1">Manage your projects</p>
-                    </div>
+                <PageHeader title='My Project' description='Manage your projects'>
                     <Button><Plus size={16} className="mr-1" />New Project</Button>
-                </div>
+                </PageHeader>
 
                 <div className='flex gap-2 items-center justify-end'>
                     <div className="relative w-full md:w-64">

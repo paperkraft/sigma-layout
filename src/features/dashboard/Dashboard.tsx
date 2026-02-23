@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 
 import ProjectCard from './components/ProjectCard';
 import QuotaItem from './components/QuotaItem';
+import { PageHeader } from '@/components/shared/page-header';
 
 // --- MOCK DATA ---
 const RECENT_PROJECTS = [
@@ -50,15 +51,11 @@ export default function Dashboard() {
       <div className="space-y-8 p-6 md:p-8">
 
          {/* 1. HEADER & ACTIONS */}
-         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-               <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-               <p className="text-muted-foreground text-sm mt-1">Welcome back, Vishal</p>
-            </div>
+         <PageHeader title='Home' description='Welcome back, Vishal'>
             <Button>
                <Plus size={16} className="mr-2" /> New Project
             </Button>
-         </div>
+         </PageHeader>
 
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
