@@ -1,13 +1,30 @@
+import React, { memo, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { ExternalLink, FolderOpen } from "lucide-react";
+import Link from "next/link";
+import { ProjectMetadata } from "@/config/project_dummy";
 
-export function ListRow({ data, onClick, isSelected, openProject }: any) {
+export interface ListRowProps {
+    data: ProjectMetadata;
+    type?: string;
+    onClick: () => void;
+    isSelected: boolean;
+    projectUrl: string;
+}
+
+export const ListRow = memo(function ListRow({ data, onClick, isSelected, projectUrl }: ListRowProps) {
+    const handleRowClick = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        onClick();
+    }, [onClick]);
+
+    const handleLinkClick = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+    }, []);
+
     return (
         <tr
-            onClick={(e) => {
-                e.stopPropagation();
-                onClick();
-            }}
+            onClick={handleRowClick}
             className={cn(
                 'cursor-pointer border-b border-border transition-colors [&_td]:px-4 [&_td]:py-3',
                 isSelected
@@ -37,16 +54,22 @@ export function ListRow({ data, onClick, isSelected, openProject }: any) {
                 {data.lastModified}
             </td>
             <td className="text-right">
-                <button
-                    className='p-1.5 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors'
-                    onClick={(e: any) => {
-                        e.stopPropagation();
-                        openProject();
-                    }}
+                <Link
+                    href={projectUrl}
+                    className='p-1.5 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors inline-block'
+                    onClick={handleLinkClick}
                 >
                     <ExternalLink size={16} />
-                </button>
+                </Link>
             </td>
         </tr>
     );
-}
+}, (prevProps, nextProps) => {
+    return (
+        prevProps.isSelected === nextProps.isSelected &&
+        prevProps.projectUrl === nextProps.projectUrl &&
+        prevProps.data.id === nextProps.data.id &&
+        prevProps.data.name === nextProps.data.name &&
+        prevProps.data.lastModified === nextProps.data.lastModified
+    );
+});

@@ -7,9 +7,18 @@ import {
   DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { base_url } from '@/config/base_url';
+
+const clearAllCookies = () => {
+  document.cookie.split(";").forEach((cookie) => {
+    const name = cookie.split("=")[0].trim();
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  });
+};
 
 export function UserAction() {
   const router = useRouter();
+
   const RenderUserInfo = () => {
     return (
       <>
@@ -25,6 +34,27 @@ export function UserAction() {
         </div>
       </>
     );
+  };
+
+  const handleLogout = async () => {
+    const res = await fetch(`${base_url}/api/User/logout`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result.message || "Logout failed");
+    }
+
+    if (result.message === "Logged out successfully") {
+      clearAllCookies();
+      router.push("/auth/sign-in");
+    }
   };
 
   return (
@@ -80,7 +110,7 @@ export function UserAction() {
         <DropdownMenuGroup>
           <DropdownMenuItem
             className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
-            onClick={() => router.push("/auth/sign-in")}
+            onClick={handleLogout}
           >
             <LogOutIcon className="mr-2 h-4 w-4 text-destructive" />
             Log out

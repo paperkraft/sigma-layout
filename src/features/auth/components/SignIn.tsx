@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,8 +27,6 @@ export default function SignInPage() {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
-  // const [isLoading, setIsLoading] = useState(false);
-  const [apiError, setApiError] = useState("");
 
   const {
     register,
@@ -41,14 +39,12 @@ export default function SignInPage() {
     },
   });
 
-  const onSubmit = async (data: SignInFormValues) => {
+  const onSubmit = useCallback(async (data: SignInFormValues) => {
     const { remember, ...rest } = data;
     try {
-      setApiError("");
-
       const res = await fetch(`${base_url}/api/User/login`, {
         method: "POST",
-        // credentials: "include",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -62,18 +58,25 @@ export default function SignInPage() {
       }
 
       if (!result.isSuccess) {
-        toast.error(result.resMsg)
+        toast.error(result.resMsg);
+        return;
       }
 
-      if (result.isSuccess) {
-        // success
-        router.replace("/home");
-      }
+      // success
+      router.replace("/home");
 
-    } catch (error: any) {
-      setApiError(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
-  };
+  }, [router]);
+
+  const togglePasswordVisibility = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
 
   return (
     <AuthLayout
@@ -127,7 +130,7 @@ export default function SignInPage() {
             Email
           </label>
           <Input
-            // id="email"
+            id="email"
             type="email"
             {...register("emailId")}
             placeholder="name@company.com"
@@ -156,7 +159,7 @@ export default function SignInPage() {
           </div>
           <div className="relative">
             <Input
-              // id="password"
+              id="password"
               type={showPassword ? "text" : "password"}
               {...register("password")}
               placeholder="••••••••"
@@ -165,7 +168,7 @@ export default function SignInPage() {
             />
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={togglePasswordVisibility}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -178,6 +181,7 @@ export default function SignInPage() {
 
         <div className="flex items-center gap-2">
           <input
+            id="remember"
             type="checkbox"
             {...register("remember")}
             className="rounded border-gray-300 text-primary focus:ring-primary"
@@ -220,13 +224,15 @@ export default function SignInPage() {
 
 // --- SUB COMPONENTS ---
 
-function SocialButton({
-  icon,
-  label,
-}: {
+interface SocialButtonProps {
   icon: React.ReactNode;
   label: string;
-}) {
+}
+
+const SocialButton = memo(function SocialButton({
+  icon,
+  label,
+}: SocialButtonProps) {
   return (
     <button
       type="button"
@@ -236,9 +242,9 @@ function SocialButton({
       <span>{label}</span>
     </button>
   );
-}
+});
 
-function GoogleIcon() {
+const GoogleIcon = memo(function GoogleIcon() {
   return (
     <svg
       width="18"
@@ -265,4 +271,4 @@ function GoogleIcon() {
       />
     </svg>
   );
-}
+});

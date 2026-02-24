@@ -1,8 +1,7 @@
 'use client';
 
 import { Info, LayoutGrid, List, Plus, Search, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { FormInput } from '@/components/form-controls/FormInput';
 import { Button } from '@/components/ui/button';
@@ -15,7 +14,6 @@ import { RightPanel } from './components/RightPanel';
 import { PageHeader } from '@/components/shared/page-header';
 
 export const ProjectList = () => {
-    const router = useRouter();
 
     const [projects] = useState<ProjectMetadata[]>(DUMMY_PROJECTS);
     const [loading] = useState(false);
@@ -24,39 +22,15 @@ export const ProjectList = () => {
     const [viewPanel, setViewPanel] = useState(true);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [searchQuery, setSearchQuery] = useState('');
-    const [features, setFeatures] = useState<string[]>([]);
-    const [loadingThumbnail, setLoadingThumbnail] = useState(false);
 
     const activeProject = projects.find((p) => p.id === selectedId);
 
-    useEffect(() => {
-        if (!selectedId) {
-            setFeatures([]);
-            return;
-        }
-
-        setLoadingThumbnail(true);
-
-        const timer = setTimeout(() => {
-            setFeatures([
-                'Pipe Network',
-                'Junctions',
-                'Valves',
-                'Hydraulic Simulation',
-            ]);
-            setLoadingThumbnail(false);
-        }, 300);
-
-        return () => clearTimeout(timer);
-    }, [selectedId]);
-
-    const handleOpenProject = useCallback(({ type, id }: { type: string, id: string }) => {
+    const getProjectUrl = useCallback(({ type, id }: { type: string, id: string }) => {
         if (type == 'aquabill') {
-            router.replace(`/projects/${type}/${id}/dashboard`);
+            return `/projects/${type}/${id}/dashboard`;
         } else {
-            router.replace(`/projects/${type}/${id}`);
+            return `/projects/${type}/${id}`;
         }
-
     }, []);
 
     const filteredProjects = projects.filter((p) => {
@@ -156,7 +130,7 @@ export const ProjectList = () => {
                                         type={p.type}
                                         isSelected={selectedId === p.id}
                                         onClick={() => setSelectedId(p.id)}
-                                        openProject={() => handleOpenProject({ type: p.type, id: p.id })}
+                                        projectUrl={getProjectUrl({ type: p.type, id: p.id })}
                                     />
                                 ))}
                             </div>
@@ -171,7 +145,7 @@ export const ProjectList = () => {
                                                 type={p.type}
                                                 isSelected={selectedId === p.id}
                                                 onClick={() => setSelectedId(p.id)}
-                                                openProject={() => handleOpenProject({ type: p.type, id: p.id })}
+                                                projectUrl={getProjectUrl({ type: p.type, id: p.id })}
                                             />
                                         ))}
                                     </tbody>
@@ -184,9 +158,10 @@ export const ProjectList = () => {
 
             {viewPanel && (
                 <RightPanel
-                    loadingThumbnail={loadingThumbnail}
-                    features={features}
+                    loadingThumbnail={true}
+                    features={[]}
                     activeProject={activeProject}
+                    getProjectUrl={getProjectUrl}
                     handleClose={() => setViewPanel(false)}
                 />
             )}
