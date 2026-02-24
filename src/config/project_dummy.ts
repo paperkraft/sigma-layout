@@ -6,6 +6,8 @@ export interface ProjectMetadata {
     name: string;
     description?: string;
     lastModified: string;
+    nodeCount?: number;
+    linkCount?: number;
 }
 
 export const DUMMY_PROJECTS: ProjectMetadata[] = [
@@ -15,6 +17,8 @@ export const DUMMY_PROJECTS: ProjectMetadata[] = [
         name: "Water Network Analysis",
         description: "Urban water distribution modeling",
         lastModified: '1/24/2026',
+        nodeCount: 120,
+        linkCount: 150,
     },
     {
         id: "proj-2",
@@ -29,6 +33,8 @@ export const DUMMY_PROJECTS: ProjectMetadata[] = [
         name: "EPANET Simulation",
         description: "Hydraulic simulation project",
         lastModified: '1/24/2026',
+        nodeCount: 180,
+        linkCount: 200,
     },
     {
         id: "proj-4",

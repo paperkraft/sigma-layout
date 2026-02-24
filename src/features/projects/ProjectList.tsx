@@ -72,7 +72,7 @@ export const ProjectList = () => {
         <div className="flex h-full">
             <div className="flex-1 flex flex-col min-w-0 z-0 p-6 md:p-8 space-y-4" onClick={() => setSelectedId(null)}>
                 {/* HEADER & ACTIONS */}
-                <PageHeader title='My Project' description='Manage your projects'>
+                <PageHeader title='My Projects' description='Manage your projects'>
                     <Button><Plus size={16} className="mr-1" />New Project</Button>
                 </PageHeader>
 

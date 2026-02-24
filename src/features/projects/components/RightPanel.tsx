@@ -117,7 +117,7 @@ export const RightPanel = ({
               </h6>
 
               <div className="text-sm text-foreground/80 leading-relaxed">
-                {activeProject.description}
+                {activeProject?.description}
               </div>
             </div>
 
@@ -129,12 +129,12 @@ export const RightPanel = ({
               <div className="grid grid-cols-2 gap-4">
                 <StatBox
                   label="Nodes"
-                  value={activeProject.nodeCount}
+                  value={activeProject?.nodeCount}
                   icon={CircleSmall}
                 />
                 <StatBox
                   label="Links"
-                  value={activeProject.linkCount}
+                  value={activeProject?.linkCount}
                   icon={GitBranchMinus}
                 />
               </div>
