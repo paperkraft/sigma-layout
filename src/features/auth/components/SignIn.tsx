@@ -67,7 +67,7 @@ export default function SignInPage() {
 
       if (result.isSuccess) {
         // success
-        router.replace("/dashboard");
+        router.replace("/home");
       }
 
     } catch (error: any) {

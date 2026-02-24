@@ -1,14 +1,14 @@
 "use client";
 
-import { ArrowRight, Clock, Cpu, FileText, HardDrive, Plus, Zap } from 'lucide-react';
+import { ArrowRight, Clock, Cpu, FileText, GitFork, HardDrive, Plus, Zap } from 'lucide-react';
 import Link from 'next/link';
 
+import { PageHeader } from '@/components/shared/page-header';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 import ProjectCard from './components/ProjectCard';
 import QuotaItem from './components/QuotaItem';
-import { PageHeader } from '@/components/shared/page-header';
 
 // --- MOCK DATA ---
 const RECENT_PROJECTS = [
@@ -46,14 +46,14 @@ const ACTIVITY_FEED = [
    { id: 3, text: "Core hour limit reached (80%).", time: "5h ago", type: "warning" },
 ];
 
-export default function Dashboard() {
+export default function Home() {
    return (
-      <div className="space-y-8 p-6 md:p-8">
+      <div className="space-y-6 p-4 md:p-6">
 
          {/* 1. HEADER & ACTIONS */}
          <PageHeader title='Home' description='Welcome back, Vishal'>
             <Button>
-               <Plus size={16} className="mr-2" /> New Project
+               <Plus size={16} className="mr-1" /> New Project
             </Button>
          </PageHeader>
 
@@ -119,15 +119,15 @@ export default function Dashboard() {
 
                   <div className="space-y-5">
                      <QuotaItem
-                        icon={<Cpu size={14} />}
-                        label="Core Hours"
+                        icon={<GitFork size={14} />}
+                        label="Pipes"
                         used={450}
                         total={1000}
                         color="bg-blue-600 dark:bg-blue-500"
                      />
                      <QuotaItem
-                        icon={<HardDrive size={14} />}
-                        label="Cloud Storage (GB)"
+                        icon={<FileText size={14} />}
+                        label="Bills"
                         used={82}
                         total={100}
                         color="bg-purple-600 dark:bg-purple-500"

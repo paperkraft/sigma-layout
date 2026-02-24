@@ -122,23 +122,25 @@ export const RightPanel = ({
             </div>
 
             {/* Stats */}
-            <div>
-              <h6 className="text-[11px] font-semibold uppercase mb-3 border-b border-border pb-2 text-muted-foreground">
-                Statistics
-              </h6>
-              <div className="grid grid-cols-2 gap-4">
-                <StatBox
-                  label="Nodes"
-                  value={activeProject?.nodeCount}
-                  icon={CircleSmall}
-                />
-                <StatBox
-                  label="Links"
-                  value={activeProject?.linkCount}
-                  icon={GitBranchMinus}
-                />
+            {activeProject.type === 'waterlab' && (
+              <div>
+                <h6 className="text-[11px] font-semibold uppercase mb-3 border-b border-border pb-2 text-muted-foreground">
+                  Statistics
+                </h6>
+                <div className="grid grid-cols-2 gap-4">
+                  <StatBox
+                    label="Nodes"
+                    value={activeProject?.nodeCount}
+                    icon={CircleSmall}
+                  />
+                  <StatBox
+                    label="Links"
+                    value={activeProject?.linkCount}
+                    icon={GitBranchMinus}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </>
       )}

@@ -39,7 +39,7 @@ const alerts = [
 
 export default function Dashboard() {
     return (
-        <div className="max-w-screen-2xl mx-auto p-4 md:p-7 space-y-4">
+        <div className="max-w-screen-2xl mx-auto p-4 md:p-6 space-y-4">
 
             {/* Header & Quick Actions */}
             <PageHeader title={'Dashboard'} description={'Overview of your billing operations and network status.'}>

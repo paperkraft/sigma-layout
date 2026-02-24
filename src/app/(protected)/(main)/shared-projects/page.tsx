@@ -1,11 +1,9 @@
-import { Placeholder } from "@/components/shared/Placeholder";
-import { Metadata } from "next";
+import { Metadata } from 'next';
+
+import { Placeholder } from '@/components/shared/Placeholder';
 
 export const metadata: Metadata = {
-   title: {
-      default: "Shared Project",
-      template: "%s | Sigma Toolbox",
-   },
+   title: "Shared Project",
    description: "Shared Project",
 };
 

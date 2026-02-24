@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: {
-    default: "Dashboard",
+    default: "Home",
     template: "%s | Sigma Toolbox",
   },
   description: "Homepage",

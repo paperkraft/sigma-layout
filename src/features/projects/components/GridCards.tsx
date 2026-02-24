@@ -1,7 +1,7 @@
 import CustomToolTip from "@/components/shared/custom-tooltip";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Clock, ExternalLink, GitFork, ReceiptIndianRupee } from "lucide-react";
+import { Clock, ExternalLink, FileText, GitFork, ReceiptIndianRupee } from "lucide-react";
 
 const PROJECT_STYLES: any = {
     aquabill: {
@@ -36,7 +36,7 @@ export function GridCard({ data, type, onClick, isSelected, openProject }: any) 
                         isSelected ? styles.selected : styles.base
                     )}
                 >
-                    {type === 'aquabill' ? <ReceiptIndianRupee size={20} /> : <GitFork size={20} />}
+                    {type === 'aquabill' ? <FileText size={20} /> : <GitFork size={20} />}
                 </div>
 
                 <div className={cn("transition-opacity duration-200", isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100")}>

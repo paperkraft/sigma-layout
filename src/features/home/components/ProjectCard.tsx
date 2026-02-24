@@ -19,7 +19,7 @@ export default function ProjectCard({ project }: any) {
    return (
       <div className="group bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer flex flex-col">
          {/* Thumbnail Area */}
-         <div className="h-32 bg-muted relative overflow-hidden">
+         <div className="h-28 bg-muted relative overflow-hidden">
             {project.thumbnail ? (
                <div
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"

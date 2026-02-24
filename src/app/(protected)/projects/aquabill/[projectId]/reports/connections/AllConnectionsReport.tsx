@@ -67,7 +67,7 @@ export default function AllConnectionsReport() {
     })
 
     return (
-        <div className="p-4 md:p-7 space-y-4">
+        <div className="p-4 md:p-6 space-y-4">
 
             {/* 1. Header & Actions */}
             <PageHeader

@@ -37,7 +37,7 @@ export function middleware(request: NextRequest) {
     // Optional: prevent logged-in users from visiting auth pages
     if (token && pathname.startsWith('/auth')) {
         return NextResponse.redirect(
-            new URL('/dashboard', request.url)
+            new URL('/home', request.url)
         );
     }
 

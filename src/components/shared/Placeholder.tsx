@@ -8,7 +8,7 @@ interface PageProps {
 
 export const Placeholder = ({ title, description, children }: PageProps) => {
     return (
-        <div className="space-y-8 p-6 md:p-8">
+        <div className="space-y-4 p-4 md:p-6">
             {/* HEADER */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>

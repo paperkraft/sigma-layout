@@ -3,10 +3,7 @@ import { Metadata } from 'next';
 import { Placeholder } from '@/components/shared/Placeholder';
 
 export const metadata: Metadata = {
-  title: {
-    default: "Subscription",
-    template: "%s | Sigma Toolbox",
-  },
+  title: "Subscription",
   description: "Subscription",
 };
 

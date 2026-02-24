@@ -7,9 +7,8 @@ export const sidebarMenuGroups: NavMenuGroup[] = [
         items: [
             {
                 title: "Home",
-                url: "/dashboard",
+                url: "/home",
                 icon: Home,
-                exact: true,
             },
         ],
     },
