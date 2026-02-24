@@ -3,7 +3,7 @@
 import { ChevronRight, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
     Sidebar,
@@ -18,10 +18,12 @@ import {
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
-    SidebarRail
+    SidebarRail,
+    useSidebar
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '../ui/scroll-area';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 // --- Generic Types ---
 export interface NavMenuItem {
@@ -43,6 +45,8 @@ interface NavSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function NavSidebar({ groups, footerContent, ...props }: NavSidebarProps) {
+    const [openMenu, setOpenMenu] = React.useState<string | null>(null)
+
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarContent className="bg-card">
@@ -57,7 +61,12 @@ export function NavSidebar({ groups, footerContent, ...props }: NavSidebarProps)
                             <SidebarGroupContent>
                                 <SidebarMenu>
                                     {group.items.map((menu) => (
-                                        <SidebarItemResolver key={menu.title} item={menu} />
+                                        <SidebarItemResolver
+                                            key={menu.title}
+                                            item={menu}
+                                            openMenu={openMenu}
+                                            setOpenMenu={setOpenMenu}
+                                        />
                                     ))}
                                 </SidebarMenu>
                             </SidebarGroupContent>
@@ -72,7 +81,7 @@ export function NavSidebar({ groups, footerContent, ...props }: NavSidebarProps)
                         <SidebarMenuItem>
                             <SidebarMenuButton
                                 tooltip="Help & Support"
-                                className="text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
+                                className="text-sidebar-foreground/70"
                             >
                                 <HelpCircle />
                                 <span>Help & Support</span>
@@ -87,9 +96,15 @@ export function NavSidebar({ groups, footerContent, ...props }: NavSidebarProps)
 }
 
 // --- Helper: Resolves Active State & Rendering ---
-function SidebarItemResolver({ item }: { item: NavMenuItem }) {
-    const pathname = usePathname();
+interface ItemResolver {
+    item: NavMenuItem;
+    openMenu: string | null;
+    setOpenMenu: (val: string | null) => void;
+    isActive: (path?: string, exact?: boolean) => boolean;
+}
 
+function SidebarItemResolver({ item, openMenu, setOpenMenu }: Omit<ItemResolver, 'isActive'>) {
+    const pathname = usePathname();
     // Robust Active Check
     const isActive = (path?: string, exact?: boolean) => {
         if (!path) return false;
@@ -108,7 +123,14 @@ function SidebarItemResolver({ item }: { item: NavMenuItem }) {
 
     // Case 1: Has Sub-Items -> Render Collapsible
     if (item.subItems && item.subItems.length > 0) {
-        return <CollapsibleMenuItem item={item} isActiveChecker={isActive} />;
+        return (
+            <CollapsibleMenuItem
+                item={item}
+                openMenu={openMenu}
+                setOpenMenu={setOpenMenu}
+                isActive={isActive}
+            />
+        );
     }
 
     // Case 2: Standard Link
@@ -120,10 +142,13 @@ function SidebarItemResolver({ item }: { item: NavMenuItem }) {
                 tooltip={item.title}
             >
                 {item.url ? (
-                    <Link href={item.url} className={cn(
-                        "transition-colors duration-200 hover:text-primary!",
-                        isActive(item.url, item.exact) && "font-semibold text-primary!"
-                    )}>
+                    <Link
+                        href={item.url}
+                        onClick={() => setOpenMenu(null)}
+                        className={cn(
+                            "transition-colors duration-200 hover:text-primary!",
+                            isActive(item.url, item.exact) && "font-semibold text-primary!"
+                        )}>
                         {item.icon && <item.icon />}
                         <span>{item.title}</span>
                     </Link>
@@ -139,32 +164,99 @@ function SidebarItemResolver({ item }: { item: NavMenuItem }) {
 }
 
 // --- Helper: Handles Collapsible State ---
-function CollapsibleMenuItem({ item, isActiveChecker }: { item: NavMenuItem, isActiveChecker: any }) {
-    const [isOpen, setIsOpen] = useState(false);
+function CollapsibleMenuItem({ item, isActive, openMenu, setOpenMenu }: ItemResolver) {
 
-    // Auto-expand if any child is active
-    useEffect(() => {
-        const hasActiveChild = item.subItems?.some(group =>
-            group.items.some(subItem => isActiveChecker(subItem.url))
-        );
-        if (hasActiveChild) setIsOpen(true);
-    }, [item, isActiveChecker]);
+    const { state, isMobile } = useSidebar();
+    const isCollapsed = state === "collapsed";
 
+    const hasActiveChild = React.useMemo(() => {
+        return item.subItems?.some(group =>
+            group.items.some(subItem =>
+                isActive(subItem.url, subItem.exact)
+            )
+        )
+    }, [item, isActive]);
+
+    const isOpen = openMenu === item.title // || hasActiveChild;
+
+    // -----------------------------------
+    // COLLAPSED MODE → DROPDOWN MENU
+    // -----------------------------------
+    if (isCollapsed && !isMobile) {
+        return (
+            <SidebarMenuItem>
+                <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger asChild>
+                        <SidebarMenuButton
+                            tooltip={isOpen ? undefined : item.title}
+                            isActive={hasActiveChild}
+                            className={cn("group justify-center cursor-pointer", hasActiveChild && "text-primary!")}
+                        >
+                            {item.icon && <item.icon className="size-4 pointer-events-none" />}
+                        </SidebarMenuButton>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent
+                        side="right"
+                        align="start"
+                        sideOffset={8}
+                        className="min-w-56 rounded-md mb-4 shadow-xl"
+                    >
+                        <DropdownMenuLabel className='font-semibold'>{item.title}</DropdownMenuLabel>
+
+                        {item.subItems?.map((group, gIdx) => (
+                            <React.Fragment key={gIdx}>
+                                {group.label && (
+                                    <>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuLabel className='px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground'>
+                                            {group.label}
+                                        </DropdownMenuLabel>
+                                    </>
+                                )}
+
+                                {group.items.map((subItem) => (
+                                    <DropdownMenuItem
+                                        key={subItem.title}
+                                        asChild
+                                        className={cn(
+                                            "cursor-pointer",
+                                            isActive(subItem.url, subItem.exact) &&
+                                            "font-medium text-primary bg-sidebar-accent"
+                                        )}
+                                    >
+                                        <Link href={subItem.url || "#"}>
+                                            {subItem.title}
+                                        </Link>
+                                    </DropdownMenuItem>
+                                ))}
+                            </React.Fragment>
+                        ))}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </SidebarMenuItem>
+        )
+    }
+
+    // -----------------------------------
+    // EXPANDED MODE → NORMAL COLLAPSIBLE
+    // -----------------------------------
     return (
         <SidebarMenuItem>
             <SidebarMenuButton
-                onClick={() => setIsOpen(!isOpen)}
                 tooltip={item.title}
                 isActive={isOpen}
+                onClick={() => setOpenMenu(isOpen ? null : item.title)}
                 className="justify-between group/collapsible hover:text-primary!"
             >
                 <div className="flex items-center gap-2">
                     {item.icon && <item.icon className="size-4" />}
                     <span>{item.title}</span>
                 </div>
+
                 <ChevronRight
                     className={cn(
-                        "ml-auto h-4 w-4 transition-transform duration-200",
+                        "ml-auto size-4 transition-transform duration-200",
                         isOpen && "rotate-90"
                     )}
                 />
@@ -175,7 +267,7 @@ function CollapsibleMenuItem({ item, isActiveChecker }: { item: NavMenuItem, isA
                     {item.subItems?.map((group, gIdx) => (
                         <div key={gIdx} className="mb-2 last:mb-0">
                             {group.label && (
-                                <div className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
+                                <div className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                                     {group.label}
                                 </div>
                             )}
@@ -183,9 +275,10 @@ function CollapsibleMenuItem({ item, isActiveChecker }: { item: NavMenuItem, isA
                                 <SidebarMenuSubItem key={subItem.title}>
                                     <SidebarMenuSubButton
                                         asChild
-                                        isActive={isActiveChecker(subItem.url, subItem.exact)}
-                                        className={cn('hover:text-primary!',
-                                            isActiveChecker(subItem.url, subItem.exact) && "font-semibold text-primary!"
+                                        isActive={isActive(subItem.url, subItem.exact)}
+                                        className={cn(
+                                            'hover:text-primary!',
+                                            isActive(subItem.url, subItem.exact) && "font-medium text-primary!"
                                         )}
                                     >
                                         <Link href={subItem.url || "#"}>
@@ -199,5 +292,5 @@ function CollapsibleMenuItem({ item, isActiveChecker }: { item: NavMenuItem, isA
                 </SidebarMenuSub>
             )}
         </SidebarMenuItem>
-    );
+    )
 }
