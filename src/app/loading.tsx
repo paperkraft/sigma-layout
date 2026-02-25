@@ -1,13 +1,14 @@
+"use client";
+
 import { cn } from "@/lib/utils";
-import { LoaderCircleIcon } from "lucide-react"
+import Logo from "@/components/layout/app-logo";
 
 export default function Loading() {
   return (
     <div className={cn("flex justify-center items-center w-full h-[calc(100svh-100px)]")}>
-      <span className="flex items-center" aria-live="polite">
-        <LoaderCircleIcon className="mr-2 h-4 w-4 animate-spin" />
-        Loading...
-      </span>
+      <div className="flex flex-col items-center gap-4 animate-pulse">
+        <Logo />
+      </div>
     </div>
   )
 }
