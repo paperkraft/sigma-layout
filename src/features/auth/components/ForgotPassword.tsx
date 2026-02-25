@@ -54,7 +54,7 @@ export default function ForgotPasswordPage() {
                 placeholder="name@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 bg-slate-50 border-slate-200"
+                className="h-11 bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
                 required
               />
             </div>
@@ -62,7 +62,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 shadow-md"
+              className="w-full h-11 shadow-md text-white dark:bg-primary dark:hover:bg-primary dark:text-white"
             >
               {isLoading ? "Sending Link..." : "Send Reset Link"}
             </Button>
@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
             <Button
               onClick={() => window.open("https://gmail.com", "_blank")}
               variant="outline"
-              className="w-full h-11 border-slate-300"
+              className="w-full h-11 border-slate-300 text-slate-900 dark:text-slate-900 dark:border-slate-300 dark:bg-transparent dark:hover:bg-slate-100"
             >
               Open Email App
             </Button>

@@ -59,7 +59,7 @@ export default function ResetPasswordPage() {
               type={showPass ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="h-11 bg-slate-50 border-slate-200 pr-10"
+              className="h-11 bg-slate-50 border-slate-200 pr-10 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
               required
             />
             <button
@@ -106,7 +106,7 @@ export default function ResetPasswordPage() {
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             className={cn(
-              "h-11 bg-slate-50 border-slate-200",
+              "h-11 bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900",
               confirm && password !== confirm
                 ? "border-red-300 focus:ring-red-200"
                 : "",
@@ -121,7 +121,7 @@ export default function ResetPasswordPage() {
         <Button
           type="submit"
           disabled={isLoading || !validations.every((v) => v.valid)}
-          className="w-full h-11 shadow-md"
+          className="w-full h-11 shadow-md text-white dark:bg-primary dark:hover:bg-primary dark:text-white"
         >
           {isLoading ? "Resetting Password..." : "Reset Password"}
         </Button>

@@ -94,7 +94,7 @@ export default function SignUpPage() {
               placeholder="First Name"
               {...register("firstName")}
               maxLength={20}
-              className="bg-slate-50 border-slate-200"
+              className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
             />
             {errors.firstName && (
               <p className="text-xs text-red-500 mt-1">
@@ -108,7 +108,7 @@ export default function SignUpPage() {
               placeholder="Last Name"
               {...register("lastName")}
               maxLength={20}
-              className="bg-slate-50 border-slate-200"
+              className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
             />
             {errors.lastName && (
               <p className="text-xs text-red-500 mt-1">
@@ -125,7 +125,7 @@ export default function SignUpPage() {
               type="email"
               placeholder="name@company.com"
               {...register("email")}
-              className="bg-slate-50 border-slate-200"
+              className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
             />
             {errors.email && (
               <p className="text-xs text-red-500 mt-1">
@@ -140,7 +140,7 @@ export default function SignUpPage() {
               placeholder="8888XXXXXXX"
               {...register("mobile")}
               maxLength={10}
-              className="bg-slate-50 border-slate-200"
+              className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
             />
             {errors.mobile && (
               <p className="text-xs text-red-500 mt-1">
@@ -158,7 +158,7 @@ export default function SignUpPage() {
               placeholder="Create a password"
               {...register("password")}
               maxLength={20}
-              className="bg-slate-50 border-slate-200 pr-10"
+              className="bg-slate-50 border-slate-200 pr-10 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
             />
             <button
               type="button"
@@ -203,7 +203,7 @@ export default function SignUpPage() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-11 shadow-md"
+          className="w-full h-11 shadow-md text-white dark:bg-primary dark:hover:bg-primary dark:text-white"
         >
           {isSubmitting ? "Creating Account..." : "Get Started"}
         </Button>

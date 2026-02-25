@@ -9,6 +9,7 @@ interface AuthLayoutProps {
   heroSubtitle: string;
   heroImage: string;
   showBackToLogin?: boolean;
+  topRightElement?: React.ReactNode;
 }
 
 export function AuthLayout({
@@ -17,6 +18,7 @@ export function AuthLayout({
   heroSubtitle,
   heroImage,
   showBackToLogin,
+  topRightElement,
 }: AuthLayoutProps) {
   return (
     <div className="min-h-screen w-full flex bg-white font-sans">
@@ -58,13 +60,20 @@ export function AuthLayout({
       <div className="flex-1 flex flex-col justify-center items-center p-8 lg:p-10 relative bg-white">
         {/* Back Link */}
         {showBackToLogin && (
-          <div className="absolute top-8 left-8">
+          <div className="absolute top-8 left-8 z-10">
             <Link
               href="/auth/sign-in"
               className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors"
             >
               <ArrowLeft size={16} /> Back to Login
             </Link>
+          </div>
+        )}
+
+        {/* Top Right Element */}
+        {topRightElement && (
+          <div className="absolute top-8 right-8 lg:right-16 z-10">
+            {topRightElement}
           </div>
         )}
 
