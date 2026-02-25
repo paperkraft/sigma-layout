@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState, useCallback, memo } from "react";
+import React, { useState, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
-import { useRouter } from "next/navigation";
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,8 +23,6 @@ type SignInFormValues = z.infer<typeof signInSchema>;
 
 
 export default function SignInPage() {
-  const router = useRouter();
-
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -41,13 +38,12 @@ export default function SignInPage() {
 
   const onSubmit = useCallback(async (data: SignInFormValues) => {
     const { remember, ...rest } = data;
+
     try {
       const res = await fetch(`${base_url}/api/User/login`, {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(rest),
       });
 
@@ -62,8 +58,7 @@ export default function SignInPage() {
         return;
       }
 
-      // success
-      router.replace("/home");
+      window.location.href = "/home";
 
     } catch (error) {
       if (error instanceof Error) {
@@ -72,7 +67,7 @@ export default function SignInPage() {
         toast.error("An unexpected error occurred");
       }
     }
-  }, [router]);
+  }, []);
 
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((prev) => !prev);

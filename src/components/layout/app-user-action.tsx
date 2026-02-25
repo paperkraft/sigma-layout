@@ -8,16 +8,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { base_url } from '@/config/base_url';
-
-const clearAllCookies = () => {
-  document.cookie.split(";").forEach((cookie) => {
-    const name = cookie.split("=")[0].trim();
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-  });
-};
+import { useAuth } from '@/features/auth/AuthProvider';
 
 export function UserAction() {
   const router = useRouter();
+
+  const { setUser } = useAuth();
 
   const RenderUserInfo = () => {
     return (
@@ -37,23 +33,28 @@ export function UserAction() {
   };
 
   const handleLogout = async () => {
-    const res = await fetch(`${base_url}/api/User/logout`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const res = await fetch(`${base_url}/api/User/logout`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    const result = await res.json();
+      if (!res.ok) {
+        console.error("Logout failed with status:", res.status);
+      }
 
-    if (!res.ok) {
-      throw new Error(result.message || "Logout failed");
-    }
+      // Whether the API failed or succeeded, we clear local state and force a reload
+      // to ensure the application resets correctly.
+      setUser(null);
+      window.location.href = "/auth/sign-in";
 
-    if (result.message === "Logged out successfully") {
-      clearAllCookies();
-      router.push("/auth/sign-in");
+    } catch (error) {
+      console.error("Logout request failed:", error);
+      setUser(null);
+      window.location.href = "/auth/sign-in";
     }
   };
 
