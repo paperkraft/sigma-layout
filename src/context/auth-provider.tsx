@@ -2,7 +2,7 @@
 
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 
-import { base_url } from '@/config/base_url';
+import { base_url } from '@/config';
 import { useMount } from '@/hooks/use-mount';
 import { IUser } from '@/interface/session';
 

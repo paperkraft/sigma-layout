@@ -10,7 +10,7 @@ import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { base_url } from "@/config/base_url";
+import { base_url } from "@/config";
 import { toast } from "sonner";
 
 const signInSchema = z.object({

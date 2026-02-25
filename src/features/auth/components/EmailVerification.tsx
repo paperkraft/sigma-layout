@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
-import { base_url } from "@/config/base_url";
+import { base_url } from "@/config";
 
 interface VerifyPageProps {
     token: string;

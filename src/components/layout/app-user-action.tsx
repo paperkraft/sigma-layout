@@ -7,8 +7,8 @@ import {
   DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { base_url } from '@/config/base_url';
-import { useAuth } from '@/features/auth/AuthProvider';
+import { base_url } from '@/config';
+import { useAuth } from '@/context/auth-provider';
 
 export function UserAction() {
   const router = useRouter();

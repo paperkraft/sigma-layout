@@ -4,8 +4,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 
 import Loading from '@/app/loading';
-import { PUBLIC_PATHS } from '@/config/base_url';
-import { useAuth } from '@/features/auth/AuthProvider';
+import { PUBLIC_PATHS } from '@/config';
+import { useAuth } from '@/context/auth-provider';
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();
@@ -32,8 +32,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
     // For unauthenticated users on private routes, or authenticated users on public routes,
     // we return null to avoid flashing content before the redirect in useEffect takes effect.
-    if (!user && !isPublicRoute) return null;
-    if (user && isPublicRoute) return null;
+    if (!user && !isPublicRoute) return <Loading />;
+    if (user && isPublicRoute) return <Loading />;
 
     // Authorized
     return <>{children}</>;
