@@ -1,17 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Mail, ArrowRight, RefreshCw, CheckCircle2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { AuthLayout } from "@/features/auth/components/AuthLayout";
+import { ArrowRight, CheckCircle2, Mail, RefreshCw } from 'lucide-react';
+import Link from 'next/link';
+import React, { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { AuthLayout } from '@/features/auth/components/AuthLayout';
+import { cn } from '@/lib/utils';
+import { getEmailProviderLink } from '@/utils';
 
 export default function VerifyEmailPage() {
   const [isResending, setIsResending] = useState(false);
   const [resendStatus, setResendStatus] = useState<"idle" | "sent">("idle");
 
-  const email = "sample@email.com";
+  const email = typeof window !== "undefined" ? localStorage.getItem("emailId") ?? "" : "";
+  const emailProvider = getEmailProviderLink(email);
 
   const handleResend = () => {
     setIsResending(true);
@@ -29,7 +32,6 @@ export default function VerifyEmailPage() {
       heroTitle="Verify your identity."
       heroSubtitle="Security is our priority. Please verify your email address to access the simulation workbench."
       heroImage="https://images.unsplash.com/photo-1557264337-e8a93017fe92?q=80&w=2670&auto=format&fit=crop"
-    // heroImage="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2670&auto=format&fit=crop"
     >
       <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Icon Circle */}
@@ -54,12 +56,14 @@ export default function VerifyEmailPage() {
 
         {/* Main Actions */}
         <div className="space-y-4">
-          <Button
-            className="w-full h-11 bg-slate-900 hover:bg-slate-800 shadow-md"
-            onClick={() => window.open("https://gmail.com", "_blank")}
-          >
-            Open Email App <ArrowRight size={16} className="ml-2" />
-          </Button>
+          {emailProvider && (
+            <Button
+              className="w-full h-11 shadow-md"
+              onClick={() => window.open(emailProvider.url, "_blank")}
+            >
+              Open {emailProvider.name} <ArrowRight size={16} className="ml-2" />
+            </Button>
+          )}
 
           <Button
             variant="outline"

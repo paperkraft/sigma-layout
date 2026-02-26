@@ -1,26 +1,20 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, ArrowRight } from "lucide-react";
-import { AuthLayout } from "@/features/auth/components/AuthLayout";
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
+import Link from 'next/link';
+import React, { useCallback, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { base_url } from "@/config";
-import { toast } from "sonner";
-
-const signInSchema = z.object({
-  emailId: z.string().email("Enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  remember: z.boolean().optional(),
-});
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { base_url } from '@/config';
+import { AuthLayout } from '@/features/auth/components/AuthLayout';
+import { signInSchema } from '@/schema/auth/sign-in';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 type SignInFormValues = z.infer<typeof signInSchema>;
-
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,20 +25,16 @@ export default function SignInPage() {
     formState: { errors, isSubmitting },
   } = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
-    defaultValues: {
-      remember: false,
-    },
   });
 
   const onSubmit = useCallback(async (data: SignInFormValues) => {
-    const { remember, ...rest } = data;
 
     try {
       const res = await fetch(`${base_url}/api/User/login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(rest),
+        body: JSON.stringify(data),
       });
 
       const result = await res.json();
@@ -154,21 +144,6 @@ export default function SignInPage() {
           {errors.password && (
             <p className="text-xs text-red-500">{errors.password.message}</p>
           )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <input
-            id="remember"
-            type="checkbox"
-            {...register("remember")}
-            className="rounded border-gray-300 text-primary focus:ring-primary"
-          />
-          <label
-            htmlFor="remember"
-            className="text-sm text-slate-600 select-none cursor-pointer"
-          >
-            Remember me
-          </label>
         </div>
 
         <Button

@@ -1,36 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Eye, EyeOff } from "lucide-react";
-import { AuthLayout } from "@/features/auth/components/AuthLayout";
-import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useCallback, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-/* ------------------ */
-/* Validation Schema  */
-/* ------------------ */
-
-const signupSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  email: z.string().email("Enter a valid email address"),
-  mobile: z
-    .string()
-    .min(8, "Enter a valid mobile number")
-    .regex(/^[0-9]+$/, "Mobile number must contain only digits"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters"),
-  terms: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms",
-  }),
-});
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { base_url } from '@/config';
+import { AuthLayout } from '@/features/auth/components/AuthLayout';
+import { signupSchema } from '@/schema/auth/sign-up';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
@@ -49,25 +32,49 @@ export default function SignUpPage() {
     }
   });
 
-  const onSubmit = async (data: SignupFormValues) => {
+  const onSubmit = useCallback(async (data: SignupFormValues) => {
+
+    const { firstName, lastName, ...rest } = data;
     const payload = {
-      ...data,
+      ...rest,
       "countryName": "India",
       "countryCode": "+91",
       "roleId": "8f6b9c1e-5d6f-4f9e-9a4a-1b2c3d4e5f07",
       "invitedProjectId": null,
       "userTypeId": null,
-      "organizationId": null,
-      "changeForgotPasswordFlag": false,
-      "gender": 1
     }
 
-    console.log(payload);
+    localStorage.setItem('emailId', rest.emailId);
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const res = await fetch(`${base_url}/api/User/signup`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    router.replace("/auth/verify-email");
-  };
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || "Sign Up failed");
+      }
+
+      if (result.isSuccess) {
+        router.replace("/auth/verify-email");
+      } else {
+        toast.error(result.resMsg);
+        return;
+      }
+
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    }
+  }, []);
 
   return (
     <AuthLayout
@@ -124,12 +131,12 @@ export default function SignUpPage() {
             <Input
               type="email"
               placeholder="name@company.com"
-              {...register("email")}
+              {...register("emailId")}
               className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
             />
-            {errors.email && (
+            {errors.emailId && (
               <p className="text-xs text-red-500 mt-1">
-                {errors.email.message}
+                {errors.emailId.message}
               </p>
             )}
           </div>
@@ -138,13 +145,13 @@ export default function SignUpPage() {
             <Input
               type="tel"
               placeholder="8888XXXXXXX"
-              {...register("mobile")}
+              {...register("mobileNo")}
               maxLength={10}
               className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
             />
-            {errors.mobile && (
+            {errors.mobileNo && (
               <p className="text-xs text-red-500 mt-1">
-                {errors.mobile.message}
+                {errors.mobileNo.message}
               </p>
             )}
           </div>

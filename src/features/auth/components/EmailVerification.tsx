@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { AlertCircle, Loader2 } from "lucide-react";
-import { AuthLayout } from "@/features/auth/components/AuthLayout";
-import { base_url } from "@/config";
+import { AlertCircle, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
+import { base_url } from '@/config';
+import { AuthLayout } from '@/features/auth/components/AuthLayout';
 
 interface VerifyPageProps {
     token: string;
@@ -14,9 +16,6 @@ interface VerifyPageProps {
 
 export default function EmailVerificationPage({ token, userId }: VerifyPageProps) {
     const router = useRouter();
-
-    console.log(token, userId)
-
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -27,20 +26,28 @@ export default function EmailVerificationPage({ token, userId }: VerifyPageProps
 
             const res = await fetch(`${base_url}/api/User/confirm-mail`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     verificationKey: token,
                     userId,
                 }),
             });
 
+            const result = await res.json();
+
             if (!res.ok) {
                 throw new Error("Verification failed");
             }
 
-            router.replace("/auth/verified-success");
+            if (result.isSuccess) {
+                router.replace("/auth/verified-success");
+                localStorage.removeItem('emailId');
+            } else {
+                toast.error(result.resMsg);
+                return;
+            }
+
         } catch (err) {
             setError("Verification link is invalid or expired.");
         } finally {
@@ -55,7 +62,6 @@ export default function EmailVerificationPage({ token, userId }: VerifyPageProps
             heroImage="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop"
         >
             <div className="flex flex-col items-center text-center space-y-6">
-
                 <div>
                     <h2 className="text-2xl font-bold text-slate-900">
                         Confirm Your Email
