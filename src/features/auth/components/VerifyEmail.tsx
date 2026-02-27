@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { base_url } from '@/config';
+import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { useApi } from '@/hooks/use-api';
 
@@ -23,7 +23,7 @@ export default function EmailVerification({ accesskey, token }: VerifyPageProps)
     const handleVerify = async () => {
         setError("");
 
-        const { data: result, error: apiError } = await post(`${base_url}/api/User/ConfirmMail`, {
+        const { data: result, error: apiError } = await post(`${user_api}/ConfirmMail`, {
             verificationKey: accesskey,
             userId: token
         });

@@ -10,7 +10,7 @@ import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { base_url } from '@/config';
+import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { signupSchema } from '@/schema/auth/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -69,7 +69,7 @@ export default function SignUpPage() {
     localStorage.setItem('emailId', rest.emailId);
 
     try {
-      const { data: result, error } = await post(`${base_url}/api/User/Signup`, payload);
+      const { data: result, error } = await post(`${user_api}/Signup`, payload);
 
       if (error) {
         toast.error(error);

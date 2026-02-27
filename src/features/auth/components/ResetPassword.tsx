@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { base_url } from '@/config';
+import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { cn } from '@/lib/utils';
 import { useApi } from '@/hooks/use-api';
@@ -30,7 +30,7 @@ export default function ResetPasswordPage({ id }: { id: string }) {
     e.preventDefault();
     if (password !== confirm) return alert("Passwords do not match");
 
-    const { data: result, error } = await put(`${base_url}/api/User/ChangeForgotPassword`, {
+    const { data: result, error } = await put(`${user_api}/ChangeForgotPassword`, {
       id: id,
       newPassword: password
     });

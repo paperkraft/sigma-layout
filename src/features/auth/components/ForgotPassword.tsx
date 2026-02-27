@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { base_url } from '@/config';
+import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { getEmailProviderLink } from '@/utils';
 import { useApi } from '@/hooks/use-api';
@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { data: result, error } = await post(`${base_url}/api/User/ForgotPassword`, {
+    const { data: result, error } = await post(`${user_api}/ForgotPassword`, {
       emailId: email
     });
 

@@ -6,7 +6,7 @@ import React, { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { base_url } from '@/config';
+import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { cn } from '@/lib/utils';
 import { getEmailProviderLink } from '@/utils';
@@ -22,7 +22,7 @@ export default function EmailSent() {
   const handleResend = useCallback(async () => {
     setResendStatus("sent");
 
-    const { data: result, error } = await post(`${base_url}/api/User/ResendConfirmation`, { emailId: email });
+    const { data: result, error } = await post(`${user_api}/ResendConfirmation`, { emailId: email });
 
     if (error) {
       toast.error(error);

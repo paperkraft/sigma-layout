@@ -9,7 +9,7 @@ import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { base_url } from '@/config';
+import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { signInSchema } from '@/schema/auth/sign-in';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,7 +30,7 @@ export default function SignInPage() {
   });
 
   const onSubmit = useCallback(async (data: SignInFormValues) => {
-    const { data: result, error } = await post(`${base_url}/api/User/Login`, data);
+    const { data: result, error } = await post(`${user_api}/Login`, data);
 
     if (error) {
       toast.error(error);

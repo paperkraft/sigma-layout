@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { base_url } from '@/config';
+import { user_api } from '@/config';
 import { useAuth } from '@/context/auth-provider';
 import { useApi } from '@/hooks/use-api';
 
@@ -35,7 +35,7 @@ export function UserAction() {
   };
 
   const handleLogout = async () => {
-    const { data: result, error } = await post(`${base_url}/api/User/logout`);
+    const { data: result, error } = await post(`${user_api}/logout`);
 
     if (error) {
       console.error("Logout request failed:", error);
