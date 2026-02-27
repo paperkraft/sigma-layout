@@ -7,6 +7,13 @@ export const metadata: Metadata = {
   description: "Reset password",
 };
 
-export default function page() {
-  return <ResetPasswordPage />;
+interface PageProps {
+  searchParams: {
+    id: string;
+  };
+}
+
+export default async function page({ searchParams }: PageProps) {
+  const { id } = await searchParams;
+  return <ResetPasswordPage id={id} />;
 }

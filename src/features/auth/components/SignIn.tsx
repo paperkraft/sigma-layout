@@ -30,7 +30,7 @@ export default function SignInPage() {
   const onSubmit = useCallback(async (data: SignInFormValues) => {
 
     try {
-      const res = await fetch(`${base_url}/api/User/login`, {
+      const res = await fetch(`${base_url}/api/User/Login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

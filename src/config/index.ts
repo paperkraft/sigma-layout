@@ -5,7 +5,7 @@ export const PUBLIC_PATHS = [
     '/auth/sign-up',
     '/auth/forgot-password',
     '/auth/reset-password',
+    '/auth/email-sent',
     '/auth/verify-email',
     '/auth/verified-success',
-    '/emailverification'
 ];

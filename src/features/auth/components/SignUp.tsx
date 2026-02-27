@@ -14,6 +14,7 @@ import { base_url } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { signupSchema } from '@/schema/auth/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
+import InputControl from '@/features/projects/aquabill/form-controls/input-control';
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
@@ -21,33 +22,52 @@ export default function SignUpPage() {
   const router = useRouter();
   const [showPass, setShowPass] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<SignupFormValues>({
+  const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      terms: false
+      terms: false,
+      isIndividual: true,
+      firstName: "",
+      lastName: "",
+      organisationName: "",
+      emailId: "",
+      mobileNo: "",
+      password: ""
     }
   });
 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = form;
+
+  const isIndividual = watch("isIndividual");
+
   const onSubmit = useCallback(async (data: SignupFormValues) => {
 
-    const { firstName, lastName, ...rest } = data;
-    const payload = {
+    const { firstName, lastName, organisationName, isIndividual, ...rest } = data;
+    let payload: any = {
       ...rest,
+      isIndividual,
       "countryName": "India",
       "countryCode": "+91",
-      "roleId": "8f6b9c1e-5d6f-4f9e-9a4a-1b2c3d4e5f07",
       "invitedProjectId": null,
-      "userTypeId": null,
+    };
+
+    if (isIndividual) {
+      payload.firstName = firstName;
+      payload.lastName = lastName;
+    } else {
+      payload.organisationName = organisationName;
     }
 
     localStorage.setItem('emailId', rest.emailId);
 
     try {
-      const res = await fetch(`${base_url}/api/User/signup`, {
+      const res = await fetch(`${base_url}/api/User/Signup`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -61,7 +81,7 @@ export default function SignUpPage() {
       }
 
       if (result.isSuccess) {
-        router.replace("/auth/verify-email");
+        router.replace("/auth/email-sent");
       } else {
         toast.error(result.resMsg);
         return;
@@ -94,36 +114,76 @@ export default function SignUpPage() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-        {/* First + Last Name */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Input
-              placeholder="First Name"
-              {...register("firstName")}
-              maxLength={20}
-              className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
-            />
-            {errors.firstName && (
-              <p className="text-xs text-red-500 mt-1">
-                {errors.firstName.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Input
-              placeholder="Last Name"
-              {...register("lastName")}
-              maxLength={20}
-              className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
-            />
-            {errors.lastName && (
-              <p className="text-xs text-red-500 mt-1">
-                {errors.lastName.message}
-              </p>
-            )}
-          </div>
+        {/* Account Type Toggle */}
+        <div className="flex p-1 bg-slate-100 rounded-lg dark:bg-slate-800">
+          <button
+            type="button"
+            onClick={() => setValue('isIndividual', true, { shouldValidate: true })}
+            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${isIndividual ? 'bg-white shadow-sm text-slate-900 dark:bg-slate-700 dark:text-white' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'}`}
+          >
+            Individual
+          </button>
+          <button
+            type="button"
+            onClick={() => setValue('isIndividual', false, { shouldValidate: true })}
+            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${!isIndividual ? 'bg-white shadow-sm text-slate-900 dark:bg-slate-700 dark:text-white' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'}`}
+          >
+            Organization
+          </button>
         </div>
+
+        {isIndividual ? (
+          /* First + Last Name */
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <InputControl
+                label='First Name'
+                {...register("firstName")}
+                value={form.getValues('firstName')}
+                onChange={(v: string) => form.setValue('firstName', v)}
+
+              // placeholder="First Name"
+              // maxLength={20}
+
+              // className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
+              />
+              {errors.firstName && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.firstName.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <Input
+                placeholder="Last Name"
+                {...register("lastName")}
+                maxLength={20}
+                className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
+              />
+              {errors.lastName && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.lastName.message}
+                </p>
+              )}
+            </div>
+          </div>
+        ) : (
+          /* Organization Name */
+          <div>
+            <Input
+              placeholder="Organization Name"
+              {...register("organisationName")}
+              maxLength={50}
+              className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
+            />
+            {errors.organisationName && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.organisationName.message}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Email + Mobile */}
         <div className="grid grid-cols-2 gap-4">

@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Lock, Check, Eye, EyeOff } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { AuthLayout } from "@/features/auth/components/AuthLayout";
+import { Check, Eye, EyeOff, Lock } from 'lucide-react';
+import Link from 'next/link';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
 
-export default function ResetPasswordPage() {
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { base_url } from '@/config';
+import { AuthLayout } from '@/features/auth/components/AuthLayout';
+import { cn } from '@/lib/utils';
+
+export default function ResetPasswordPage({ id }: { id: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
@@ -22,15 +25,43 @@ export default function ResetPasswordPage() {
     { label: "Contains a symbol", valid: /[!@#$%^&*]/.test(password) },
   ];
 
-  const handleReset = (e: React.FormEvent) => {
+  const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirm) return alert("Passwords do not match");
-
     setIsLoading(true);
-    setTimeout(() => {
-      alert("Password reset successfully!");
-      window.location.href = "/auth/sign-in";
-    }, 2000);
+
+    try {
+      const res = await fetch(`${base_url}/api/User/ChangeForgotPassword`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: id,
+          newPassword: password
+        }),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || "Failed to reset password");
+      }
+
+      if (!result.isSuccess) {
+        toast.error(result.resMsg);
+        return;
+      } else {
+        toast.success("Password reset successful");
+        window.location.href = "/auth/sign-in";
+      }
+
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    }
   };
 
   return (

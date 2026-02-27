@@ -1,12 +1,20 @@
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
-import VerifyEmailPage from "@/features/auth/components/VerifyEmail";
+import EmailVerification from '@/features/auth/components/VerifyEmail';
 
 export const metadata: Metadata = {
   title: "Verify Email",
-  description: "Verify email",
+  description: "Verify your email address",
 };
 
-export default function page() {
-  return <VerifyEmailPage />;
+interface PageProps {
+  searchParams: {
+    accesskey: string;
+    token: string;
+  };
+}
+
+export default async function page({ searchParams }: PageProps) {
+  const { accesskey, token } = await searchParams;
+  return <EmailVerification accesskey={accesskey} token={token} />;
 }

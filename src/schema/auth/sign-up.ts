@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
 export const signupSchema = z.object({
-    firstName: z.string().min(2, "First name must be at least 2 characters"),
-    lastName: z.string().min(2, "Last name must be at least 2 characters"),
+    isIndividual: z.boolean(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    organisationName: z.string().optional(),
     emailId: z.email("Enter a valid email address"),
     mobileNo: z
         .string()
@@ -13,6 +15,30 @@ export const signupSchema = z.object({
         .min(8, "Password must be at least 8 characters"),
     terms: z.boolean().refine((val) => val === true, {
         message: "You must accept the terms",
-    }),
-    isIndividual: z.boolean().optional(),
+    })
+}).superRefine((data, ctx) => {
+    if (data.isIndividual) {
+        if (!data.firstName || data.firstName.length < 2) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['firstName'],
+                message: "First name must be at least 2 characters"
+            });
+        }
+        if (!data.lastName || data.lastName.length < 2) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['lastName'],
+                message: "Last name must be at least 2 characters"
+            });
+        }
+    } else {
+        if (!data.organisationName || data.organisationName.length < 2) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['organisationName'],
+                message: "Organization name must be at least 2 characters"
+            });
+        }
+    }
 });
