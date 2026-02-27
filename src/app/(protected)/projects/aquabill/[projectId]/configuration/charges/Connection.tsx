@@ -99,7 +99,6 @@ export default function ConnectionCharges() {
                     value={getValue()}
                     onChange={(val) => table.options.meta?.updateData(row.index, column.id, val)}
                     options={sizeOptions}
-                    placeholder="Select Size"
                 />
             ),
         },

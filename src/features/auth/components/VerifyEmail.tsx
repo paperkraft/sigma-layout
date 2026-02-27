@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { base_url } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
+import { useApi } from '@/hooks/use-api';
 
 interface VerifyPageProps {
     accesskey: string;
@@ -16,42 +17,28 @@ interface VerifyPageProps {
 
 export default function EmailVerification({ accesskey, token }: VerifyPageProps) {
     const router = useRouter();
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const { post, isLoading: loading } = useApi();
 
     const handleVerify = async () => {
-        try {
-            setLoading(true);
-            setError("");
+        setError("");
 
-            const res = await fetch(`${base_url}/api/User/ConfirmMail`, {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    verificationKey: accesskey,
-                    userId: token
-                }),
-            });
+        const { data: result, error: apiError } = await post(`${base_url}/api/User/ConfirmMail`, {
+            verificationKey: accesskey,
+            userId: token
+        });
 
-            const result = await res.json();
-
-            if (!res.ok) {
-                throw new Error("Verification failed");
-            }
-
-            if (!result.isSuccess) {
-                toast.error(result.resMsg);
-                return;
-            } else {
-                router.replace("/auth/verified-success");
-                localStorage.removeItem('emailId');
-            }
-
-        } catch (err) {
+        if (apiError) {
             setError("Verification link is invalid or expired.");
-        } finally {
-            setLoading(false);
+            return;
+        }
+
+        if (result && !result.isSuccess) {
+            toast.error(result.resMsg);
+            return;
+        } else if (result && result.isSuccess) {
+            router.replace("/auth/verified-success");
+            localStorage.removeItem('emailId');
         }
     };
 

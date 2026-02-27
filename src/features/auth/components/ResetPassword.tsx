@@ -10,10 +10,11 @@ import { Input } from '@/components/ui/input';
 import { base_url } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { cn } from '@/lib/utils';
+import { useApi } from '@/hooks/use-api';
 
 export default function ResetPasswordPage({ id }: { id: string }) {
-  const [isLoading, setIsLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const { put, isLoading } = useApi();
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -28,39 +29,23 @@ export default function ResetPasswordPage({ id }: { id: string }) {
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirm) return alert("Passwords do not match");
-    setIsLoading(true);
 
-    try {
-      const res = await fetch(`${base_url}/api/User/ChangeForgotPassword`, {
-        method: "PUT",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: id,
-          newPassword: password
-        }),
-      });
+    const { data: result, error } = await put(`${base_url}/api/User/ChangeForgotPassword`, {
+      id: id,
+      newPassword: password
+    });
 
-      const result = await res.json();
+    if (error) {
+      toast.error(error);
+      return;
+    }
 
-      if (!res.ok) {
-        throw new Error(result.message || "Failed to reset password");
-      }
-
-      if (!result.isSuccess) {
-        toast.error(result.resMsg);
-        return;
-      } else {
-        toast.success("Password reset successful");
-        window.location.href = "/auth/sign-in";
-      }
-
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred");
-      }
+    if (result && !result.isSuccess) {
+      toast.error(result.resMsg);
+      return;
+    } else if (result && result.isSuccess) {
+      toast.success("Password reset successful");
+      window.location.href = "/auth/sign-in";
     }
   };
 

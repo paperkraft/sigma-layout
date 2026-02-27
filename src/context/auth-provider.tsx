@@ -4,6 +4,7 @@ import { createContext, Dispatch, SetStateAction, useContext, useEffect, useStat
 
 import { base_url } from '@/config';
 import { useMount } from '@/hooks/use-mount';
+import { useApi } from '@/hooks/use-api';
 import { IUser } from '@/interface/session';
 
 interface IAuthContext {
@@ -15,41 +16,25 @@ interface IAuthContext {
 const AuthContext = createContext<IAuthContext | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<IUser | null>(null);
-
     const isMounted = useMount();
+    const { post } = useApi();
 
     useEffect(() => {
         async function checkSession() {
-            try {
-                // Call your external API to get user details
-                const res = await fetch(`${base_url}/api/User/Session`, {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
+            const { data: result, error } = await post(`${base_url}/api/User/Session`);
 
-                if (res.ok) {
-                    const result = await res.json();
-                    if (result.isSuccess) {
-                        console.log('Session', result.result);
-                        setUser(result.result as IUser);
-                    }
-                } else {
-                    setUser(null);
-                }
-            } catch (err) {
+            if (error || !result || !result.isSuccess) {
                 setUser(null);
-            } finally {
-                setLoading(false);
+            } else {
+                console.log('Session', result.result);
+                setUser(result.result as IUser);
             }
+            setLoading(false);
         }
         checkSession();
-    }, []);
+    }, [post]);
 
     if (!isMounted) return null;
 

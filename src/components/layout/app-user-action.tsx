@@ -9,11 +9,13 @@ import {
 import { cn } from '@/lib/utils';
 import { base_url } from '@/config';
 import { useAuth } from '@/context/auth-provider';
+import { useApi } from '@/hooks/use-api';
 
 export function UserAction() {
   const router = useRouter();
 
   const { setUser } = useAuth();
+  const { post } = useApi();
 
   const RenderUserInfo = () => {
     return (
@@ -33,29 +35,18 @@ export function UserAction() {
   };
 
   const handleLogout = async () => {
-    try {
-      const res = await fetch(`${base_url}/api/User/logout`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    const { data: result, error } = await post(`${base_url}/api/User/logout`);
 
-      if (!res.ok) {
-        console.error("Logout failed with status:", res.status);
-      }
-
-      // Whether the API failed or succeeded, we clear local state and force a reload
-      // to ensure the application resets correctly.
-      setUser(null);
-      window.location.href = "/auth/sign-in";
-
-    } catch (error) {
+    if (error) {
       console.error("Logout request failed:", error);
-      setUser(null);
-      window.location.href = "/auth/sign-in";
+    } else if (result && !result.isSuccess) {
+      console.error("Logout failed with status:", result.resMsg);
     }
+
+    // Whether the API failed or succeeded, we clear local state and force a reload
+    // to ensure the application resets correctly.
+    setUser(null);
+    window.location.href = "/auth/sign-in";
   };
 
   return (

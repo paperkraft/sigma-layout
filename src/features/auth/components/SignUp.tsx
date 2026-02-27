@@ -15,12 +15,14 @@ import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { signupSchema } from '@/schema/auth/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputControl from '@/features/projects/aquabill/form-controls/input-control';
+import { useApi } from '@/hooks/use-api';
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignUpPage() {
   const router = useRouter();
   const [showPass, setShowPass] = useState(false);
+  const { post } = useApi();
 
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
@@ -67,26 +69,19 @@ export default function SignUpPage() {
     localStorage.setItem('emailId', rest.emailId);
 
     try {
-      const res = await fetch(`${base_url}/api/User/Signup`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const { data: result, error } = await post(`${base_url}/api/User/Signup`, payload);
 
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.message || "Sign Up failed");
-      }
-
-      if (result.isSuccess) {
-        router.replace("/auth/email-sent");
-      } else {
-        toast.error(result.resMsg);
+      if (error) {
+        toast.error(error);
         return;
       }
 
+      if (result && result.isSuccess) {
+        router.replace("/auth/email-sent");
+      } else if (result && !result.isSuccess) {
+        toast.error(result.resMsg);
+        return;
+      }
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -94,7 +89,7 @@ export default function SignUpPage() {
         toast.error("An unexpected error occurred");
       }
     }
-  }, []);
+  }, [post, router]);
 
   return (
     <AuthLayout

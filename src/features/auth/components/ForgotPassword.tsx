@@ -9,49 +9,34 @@ import { Input } from '@/components/ui/input';
 import { base_url } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { getEmailProviderLink } from '@/utils';
+import { useApi } from '@/hooks/use-api';
 
 export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const { post, isLoading } = useApi();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    try {
-      const res = await fetch(`${base_url}/api/User/ForgotPassword`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          emailId: email
-        }),
-      });
+    const { data: result, error } = await post(`${base_url}/api/User/ForgotPassword`, {
+      emailId: email
+    });
 
-      const result = await res.json();
+    if (error) {
+      toast.error(error);
+      return;
+    }
 
-      if (!res.ok) {
-        throw new Error(result.message || "Failed to send email");
-      }
+    if (result && !result.isSuccess) {
+      toast.error(result.resMsg);
+      setIsSubmitted(false);
+      return;
+    }
 
-      if (!result.isSuccess) {
-        toast.error(result.resMsg);
-        setIsSubmitted(false);
-        return;
-      }
-
+    if (result && result.isSuccess) {
       toast.success(result.resMsg);
       setIsSubmitted(true);
-
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred");
-      }
-    } finally {
-      setIsLoading(false);
     }
   };
 

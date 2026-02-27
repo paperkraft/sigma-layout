@@ -10,50 +10,35 @@ import { base_url } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { cn } from '@/lib/utils';
 import { getEmailProviderLink } from '@/utils';
+import { useApi } from '@/hooks/use-api';
 
 export default function EmailSent() {
-  const [isResending, setIsResending] = useState(false);
   const [resendStatus, setResendStatus] = useState<"idle" | "sent">("idle");
+  const { post, isLoading: isResending } = useApi();
 
   const email = typeof window !== "undefined" ? localStorage.getItem("emailId") ?? "" : "";
   const emailProvider = getEmailProviderLink(email);
 
   const handleResend = useCallback(async () => {
-    setIsResending(true);
     setResendStatus("sent");
 
-    try {
-      const res = await fetch(`${base_url}/api/User/ResendConfirmation`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emailId: email }),
-      });
+    const { data: result, error } = await post(`${base_url}/api/User/ResendConfirmation`, { emailId: email });
 
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error("Resend failed");
-      }
-
-      if (!result.isSuccess) {
-        toast.error(result.resMsg);
-        return;
-      } else {
-        toast.success("Email sent");
-      }
-
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred");
-      }
-    } finally {
+    if (error) {
+      toast.error(error);
       setResendStatus("idle");
-      setIsResending(false);
+      return;
     }
-  }, []);
+
+    if (result && !result.isSuccess) {
+      toast.error(result.resMsg);
+      setResendStatus("idle");
+      return;
+    } else if (result && result.isSuccess) {
+      toast.success("Email sent");
+      setResendStatus("idle");
+    }
+  }, [post, email]);
 
   return (
     <AuthLayout

@@ -13,11 +13,13 @@ import { base_url } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { signInSchema } from '@/schema/auth/sign-in';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useApi } from '@/hooks/use-api';
 
 type SignInFormValues = z.infer<typeof signInSchema>;
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const { post } = useApi();
 
   const {
     register,
@@ -28,36 +30,22 @@ export default function SignInPage() {
   });
 
   const onSubmit = useCallback(async (data: SignInFormValues) => {
+    const { data: result, error } = await post(`${base_url}/api/User/Login`, data);
 
-    try {
-      const res = await fetch(`${base_url}/api/User/Login`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.message || "Login failed");
-      }
-
-      if (!result.isSuccess) {
-        toast.error(result.resMsg);
-        return;
-      }
-
-      window.location.href = "/home";
-
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred");
-      }
+    if (error) {
+      toast.error(error);
+      return;
     }
-  }, []);
+
+    if (result && !result.isSuccess) {
+      toast.error(result.resMsg);
+      return;
+    }
+
+    if (result && result.isSuccess) {
+      window.location.href = "/home";
+    }
+  }, [post]);
 
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((prev) => !prev);
