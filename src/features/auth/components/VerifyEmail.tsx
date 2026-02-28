@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { useApi } from '@/hooks/use-api';
+import LoaderEffect from '@/components/shared/loader-effect';
 
 interface VerifyPageProps {
     accesskey: string;
@@ -70,14 +71,7 @@ export default function EmailVerification({ accesskey, token }: VerifyPageProps)
                     disabled={loading}
                     className="w-full h-11 shadow-md"
                 >
-                    {loading ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Verifying...
-                        </>
-                    ) : (
-                        "Verify Account"
-                    )}
+                    <LoaderEffect loading={loading} loadingText="Verifying..." text="Verify Account" />
                 </Button>
             </div>
         </AuthLayout>

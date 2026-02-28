@@ -16,6 +16,7 @@ import { signupSchema } from '@/schema/auth/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputControl from '@/features/projects/aquabill/form-controls/input-control';
 import { useApi } from '@/hooks/use-api';
+import LoaderEffect from '@/components/shared/loader-effect';
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
@@ -267,7 +268,7 @@ export default function SignUpPage() {
           disabled={isSubmitting}
           className="w-full h-11 shadow-md text-white dark:bg-primary dark:hover:bg-primary dark:text-white"
         >
-          {isSubmitting ? "Creating Account..." : "Get Started"}
+          <LoaderEffect loading={isSubmitting} loadingText="Creating Account..." text="Get Started" />
         </Button>
       </form>
 
