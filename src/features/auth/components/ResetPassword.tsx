@@ -11,9 +11,10 @@ import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { cn } from '@/lib/utils';
 import { useApi } from '@/hooks/use-api';
+import { FloatingInputController } from '@/components/form-controls/floating/InputControl';
+import LoaderEffect from '@/components/shared/loader-effect';
 
 export default function ResetPasswordPage({ id }: { id: string }) {
-  const [showPass, setShowPass] = useState(false);
   const { put, isLoading } = useApi();
 
   const [password, setPassword] = useState("");
@@ -66,27 +67,15 @@ export default function ResetPasswordPage({ id }: { id: string }) {
       </div>
 
       <form onSubmit={handleReset} className="space-y-5">
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700 uppercase">
-            New Password
-          </label>
-          <div className="relative">
-            <Input
-              type={showPass ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="h-11 bg-slate-50 border-slate-200 pr-10 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPass(!showPass)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-            >
-              {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
-          </div>
-        </div>
+
+        <FloatingInputController
+          type='password'
+          name='password'
+          label='New Password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          forcelightmode
+        />
 
         {/* Password Strength Meter */}
         <div className="space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
@@ -113,33 +102,22 @@ export default function ResetPasswordPage({ id }: { id: string }) {
           ))}
         </div>
 
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700 uppercase">
-            Confirm Password
-          </label>
-          <Input
-            type="password"
-            value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
-            className={cn(
-              "h-11 bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900",
-              confirm && password !== confirm
-                ? "border-red-300 focus:ring-red-200"
-                : "",
-            )}
-            required
-          />
-          {confirm && password !== confirm && (
-            <p className="text-[10px] text-red-500">Passwords do not match</p>
-          )}
-        </div>
+        <FloatingInputController
+          type='password'
+          name='password'
+          label='Confirm Password'
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          forcelightmode
+          error={confirm && password !== confirm ? "Passwords do not match" : ""}
+        />
 
         <Button
           type="submit"
           disabled={isLoading || !validations.every((v) => v.valid)}
-          className="w-full h-11 shadow-md text-white dark:bg-primary dark:hover:bg-primary dark:text-white"
+          className="w-full h-11 shadow-md dark:text-white"
         >
-          {isLoading ? "Resetting Password..." : "Reset Password"}
+          <LoaderEffect loading={isLoading} text='Reset Password' loadingText='Resetting Password...' />
         </Button>
       </form>
 

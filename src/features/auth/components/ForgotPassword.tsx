@@ -5,11 +5,11 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { getEmailProviderLink } from '@/utils';
 import { useApi } from '@/hooks/use-api';
+import { FloatingInputController } from '@/components/form-controls/floating/InputControl';
 
 export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -65,19 +65,16 @@ export default function ForgotPasswordPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700 uppercase">
-                Email Address
-              </label>
-              <Input
-                type="email"
-                placeholder="name@company.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-11 bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
-                required
-              />
-            </div>
+            <FloatingInputController
+              type='email'
+              name='email'
+              label='Email'
+              value={email}
+              placeholder="name@company.com"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              forcelightmode
+            />
 
             <Button
               type="submit"

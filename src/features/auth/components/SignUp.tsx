@@ -1,28 +1,27 @@
 "use client";
 
-import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { FloatingInputController } from '@/components/form-controls/floating/InputControl';
+import LoaderEffect from '@/components/shared/loader-effect';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
 import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
+import { useApi } from '@/hooks/use-api';
 import { signupSchema } from '@/schema/auth/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
-import InputControl from '@/features/projects/aquabill/form-controls/input-control';
-import { useApi } from '@/hooks/use-api';
-import LoaderEffect from '@/components/shared/loader-effect';
+import { FloatingDateController } from '@/components/form-controls/floating/DatePickerControl';
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignUpPage() {
   const router = useRouter();
-  const [showPass, setShowPass] = useState(false);
   const { post } = useApi();
 
   const form = useForm<z.infer<typeof signupSchema>>({
@@ -40,7 +39,6 @@ export default function SignUpPage() {
   });
 
   const {
-    register,
     handleSubmit,
     watch,
     setValue,
@@ -104,182 +102,123 @@ export default function SignUpPage() {
           Create your account
         </h2>
         <p className="text-slate-500 text-sm mt-1">
-          Start your 14-day free trial. No credit card required.
+          Start your 30-days free trial. No credit card required.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-        {/* Account Type Toggle */}
-        <div className="flex p-1 bg-slate-100 rounded-lg dark:bg-slate-800">
-          <button
-            type="button"
-            onClick={() => setValue('isIndividual', true, { shouldValidate: true })}
-            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${isIndividual ? 'bg-white shadow-sm text-slate-900 dark:bg-slate-700 dark:text-white' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'}`}
-          >
-            Individual
-          </button>
-          <button
-            type="button"
-            onClick={() => setValue('isIndividual', false, { shouldValidate: true })}
-            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${!isIndividual ? 'bg-white shadow-sm text-slate-900 dark:bg-slate-700 dark:text-white' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'}`}
-          >
-            Organization
-          </button>
-        </div>
-
-        {isIndividual ? (
-          /* First + Last Name */
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <InputControl
-                label='First Name'
-                {...register("firstName")}
-                value={form.getValues('firstName')}
-                onChange={(v: string) => form.setValue('firstName', v)}
-
-              // placeholder="First Name"
-              // maxLength={20}
-
-              // className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
-              />
-              {errors.firstName && (
-                <p className="text-xs text-red-500 mt-1">
-                  {errors.firstName.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Input
-                placeholder="Last Name"
-                {...register("lastName")}
-                maxLength={20}
-                className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
-              />
-              {errors.lastName && (
-                <p className="text-xs text-red-500 mt-1">
-                  {errors.lastName.message}
-                </p>
-              )}
-            </div>
-          </div>
-        ) : (
-          /* Organization Name */
-          <div>
-            <Input
-              placeholder="Organization Name"
-              {...register("organisationName")}
-              maxLength={50}
-              className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
-            />
-            {errors.organisationName && (
-              <p className="text-xs text-red-500 mt-1">
-                {errors.organisationName.message}
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Email + Mobile */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Input
-              type="email"
-              placeholder="name@company.com"
-              {...register("emailId")}
-              className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
-            />
-            {errors.emailId && (
-              <p className="text-xs text-red-500 mt-1">
-                {errors.emailId.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Input
-              type="tel"
-              placeholder="8888XXXXXXX"
-              {...register("mobileNo")}
-              maxLength={10}
-              className="bg-slate-50 border-slate-200 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
-            />
-            {errors.mobileNo && (
-              <p className="text-xs text-red-500 mt-1">
-                {errors.mobileNo.message}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Password */}
-        <div>
-          <div className="relative">
-            <Input
-              type={showPass ? "text" : "password"}
-              placeholder="Create a password"
-              {...register("password")}
-              maxLength={20}
-              className="bg-slate-50 border-slate-200 pr-10 text-slate-900 dark:bg-slate-50 dark:border-slate-200 dark:text-slate-900"
-            />
+          {/* Account Type Toggle */}
+          <div className="flex p-1 bg-slate-100 rounded-md">
             <button
               type="button"
-              onClick={() => setShowPass(!showPass)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              onClick={() => setValue('isIndividual', true, { shouldValidate: true })}
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${isIndividual ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-900'}`}
             >
-              {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+              Individual
+            </button>
+            <button
+              type="button"
+              onClick={() => setValue('isIndividual', false, { shouldValidate: true })}
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${!isIndividual ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-900'}`}
+            >
+              Organization
             </button>
           </div>
-          {errors.password && (
-            <p className="text-xs text-red-500 mt-1">
-              {errors.password.message}
-            </p>
+
+          {isIndividual ? (
+            /* First + Last Name */
+            <div className="grid grid-cols-2 gap-4">
+              <FloatingInputController
+                type='text'
+                name='firstName'
+                label='First Name'
+                placeholder='Enter First Name'
+                forcelightmode
+                reset
+              />
+
+              <FloatingInputController
+                type='text'
+                name='lastName'
+                label='Last Name'
+                placeholder='Enter Last Name'
+                forcelightmode
+                reset
+              />
+            </div>
+          ) : (
+            /* Organization Name */
+            <FloatingInputController
+              type='text'
+              name='organisationName'
+              label='Organization Name'
+              placeholder='Enter Organization Name'
+              forcelightmode
+              reset
+            />
           )}
-        </div>
 
-        {/* Terms */}
-        <div className="flex items-start gap-3 pt-2">
-          <input
-            type="checkbox"
-            {...register("terms")}
-            className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+          {/* Email + Mobile */}
+          <div className="grid grid-cols-2 gap-4">
+            <FloatingInputController
+              type='email'
+              name='emailId'
+              label='Email'
+              placeholder='Enter email'
+              forcelightmode
+              reset
+            />
+
+            <FloatingInputController
+              type='number'
+              name='mobileNo'
+              label='Mobile No.'
+              placeholder='Enter Mobile No.'
+              maxLength={10}
+              forcelightmode
+              reset
+            />
+          </div>
+
+          {/* Password */}
+          <FloatingInputController
+            type='password'
+            name='password'
+            label='Password'
+            placeholder='Create a password'
+            forcelightmode
           />
-          <label className="text-xs text-slate-500 leading-relaxed">
-            I agree to the{" "}
-            <Link href="#" className="text-primary hover:underline">
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link href="#" className="text-primary hover:underline">
-              Privacy Policy
-            </Link>
-          </label>
-        </div>
-        {errors.terms && (
-          <p className="text-xs text-red-500">
-            {errors.terms.message}
-          </p>
-        )}
 
-        {/* Submit */}
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full h-11 shadow-md text-white dark:bg-primary dark:hover:bg-primary dark:text-white"
-        >
-          <LoaderEffect loading={isSubmitting} loadingText="Creating Account..." text="Get Started" />
-        </Button>
-      </form>
+          {/* Terms */}
+          <div className="flex items-start gap-3 pt-2">
+            <input
+              type="checkbox"
+              {...form.register('terms')}
+              className="mt-1 rounded border-gray-300 dark:bg-white! text-primary focus:ring-primary"
+            />
+            <label className="text-xs text-slate-500 leading-relaxed">
+              I agree to the&nbsp;<Link href="#" className="text-primary hover:underline">Terms of Service</Link>
+              &nbsp;and&nbsp;<Link href="#" className="text-primary hover:underline">&nbsp;Privacy Policy</Link>
+            </label>
+          </div>
+          {errors.terms && (<p className="text-xs text-destructive">{errors.terms.message}</p>)}
+
+          {/* Submit */}
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className='w-full h-10 dark:text-white shadow-md rounded-sm'
+          >
+            <LoaderEffect loading={isSubmitting} loadingText="Creating Account..." text="Get Started" />
+          </Button>
+        </form>
+      </Form>
 
       <div className="mt-6 text-center text-sm text-slate-500">
         Already have an account?
-        <Link
-          href="/auth/sign-in"
-          className="ml-2 font-semibold text-primary"
-        >
-          Sign in
-        </Link>
+        <Link href="/auth/sign-in" className="ml-2 font-semibold text-primary">Sign in</Link>
       </div>
     </AuthLayout>
   );

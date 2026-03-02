@@ -161,3 +161,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.rdp-month_caption {
+  display: none;
+}
+
+.rdp-caption_label {
+  display: none;
+}
