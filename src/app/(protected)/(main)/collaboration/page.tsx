@@ -8,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return (<Placeholder title={"Collaboration Center"} description={"Manage project access and review pending invitations."} />);
+  return (
+    <>
+      <Placeholder title={"Collaboration Center"} description={"Manage project access and review pending invitations."} />
+    </>
+  );
 }

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { FloatingInputController } from '@/components/form-controls/floating/InputControl';
+import { FloatingInputController } from '@/components/form-controls/floating/InputController';
 import LoaderEffect from '@/components/shared/loader-effect';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
@@ -16,7 +16,8 @@ import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { useApi } from '@/hooks/use-api';
 import { signupSchema } from '@/schema/auth/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FloatingDateController } from '@/components/form-controls/floating/DatePickerControl';
+import { CheckboxController } from '@/components/form-controls/floating/CheckboxController';
+import { Checkbox } from '@/components/ui/checkbox';
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
@@ -40,16 +41,16 @@ export default function SignUpPage() {
 
   const {
     handleSubmit,
-    watch,
     setValue,
     formState: { errors, isSubmitting },
   } = form;
 
-  const isIndividual = watch("isIndividual");
+  const isIndividual = form.watch("isIndividual");
 
   const onSubmit = useCallback(async (data: SignupFormValues) => {
 
-    const { firstName, lastName, organisationName, isIndividual, ...rest } = data;
+    const { firstName, lastName, organisationName, isIndividual, terms, ...rest } = data;
+
     let payload: any = {
       ...rest,
       isIndividual,
@@ -67,26 +68,20 @@ export default function SignUpPage() {
 
     localStorage.setItem('emailId', rest.emailId);
 
-    try {
-      const { data: result, error } = await post(`${user_api}/Signup`, payload);
+    const { data: result, error } = await post(`${user_api}/Signup`, payload);
 
-      if (error) {
-        toast.error(error);
-        return;
-      }
+    if (error) {
+      toast.error(error);
+      return;
+    }
 
-      if (result && result.isSuccess) {
-        router.replace("/auth/email-sent");
-      } else if (result && !result.isSuccess) {
-        toast.error(result.resMsg);
-        return;
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred");
-      }
+    if (result && !result.isSuccess) {
+      toast.error(result.resMsg);
+      return;
+    }
+
+    if (result && result.isSuccess) {
+      router.replace("/auth/email-sent");
     }
   }, [post, router]);
 
@@ -131,7 +126,6 @@ export default function SignUpPage() {
             /* First + Last Name */
             <div className="grid grid-cols-2 gap-4">
               <FloatingInputController
-                type='text'
                 name='firstName'
                 label='First Name'
                 placeholder='Enter First Name'
@@ -140,7 +134,6 @@ export default function SignUpPage() {
               />
 
               <FloatingInputController
-                type='text'
                 name='lastName'
                 label='Last Name'
                 placeholder='Enter Last Name'
@@ -151,7 +144,6 @@ export default function SignUpPage() {
           ) : (
             /* Organization Name */
             <FloatingInputController
-              type='text'
               name='organisationName'
               label='Organization Name'
               placeholder='Enter Organization Name'
@@ -192,18 +184,21 @@ export default function SignUpPage() {
           />
 
           {/* Terms */}
-          <div className="flex items-start gap-3 pt-2">
-            <input
-              type="checkbox"
-              {...form.register('terms')}
-              className="mt-1 rounded border-gray-300 dark:bg-white! text-primary focus:ring-primary"
-            />
-            <label className="text-xs text-slate-500 leading-relaxed">
-              I agree to the&nbsp;<Link href="#" className="text-primary hover:underline">Terms of Service</Link>
-              &nbsp;and&nbsp;<Link href="#" className="text-primary hover:underline">&nbsp;Privacy Policy</Link>
-            </label>
+          <div>
+            <div className="flex items-start py-2">
+              <CheckboxController
+                disableRHF
+                {...form.register('terms')}
+                onCheckedChange={(c) => { setValue('terms', c); form.clearErrors('terms') }}
+                className='dark:[&_button]:bg-white dark:[&_button]:border-gray-400 dark:[&_button]:text-white dark:[&_button]:data-[state=checked]:border-primary'
+              />
+              <label htmlFor='terms' className="text-xs text-slate-500 leading-relaxed">
+                I agree to the&nbsp;<Link href="#" className="text-primary hover:underline">Terms of Service</Link>
+                &nbsp;and&nbsp;<Link href="#" className="text-primary hover:underline">&nbsp;Privacy Policy</Link>
+              </label>
+            </div>
+            {errors.terms && (<p className="text-xs text-destructive">{errors.terms.message}</p>)}
           </div>
-          {errors.terms && (<p className="text-xs text-destructive">{errors.terms.message}</p>)}
 
           {/* Submit */}
           <Button

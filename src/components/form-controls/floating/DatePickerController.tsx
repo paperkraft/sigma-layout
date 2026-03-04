@@ -49,8 +49,9 @@ const FloatingDateControllerInner = <T extends FieldValues>(
         className,
         forcelightmode,
     }: HybridDateControllerProps<T>,
-    ref: React.Ref<any> // Using 'any' or specific HTML element ref based on your FloatingDateField implementation
+    ref: React.Ref<any>
 ) => {
+
     const form = useFormContext<T>();
     const isRHF = !disableRHF && (!!control || !!form);
 
@@ -66,26 +67,17 @@ const FloatingDateControllerInner = <T extends FieldValues>(
             <FormField
                 control={control ?? form.control}
                 name={name as Path<T>}
-                render={({ field }) => {
-                    const handleRef = (e: any) => {
-                        field.ref(e);
-                        if (typeof ref === 'function') {
-                            ref(e);
-                        } else if (ref) {
-                            (ref as React.RefObject<any>).current = e;
-                        }
-                    };
+                render={({ field, fieldState }) => {
 
                     const handleChange = (date: Date | null) => {
                         const formatted = date ? format(date, "yyyy-MM-dd") : "";
                         field.onChange(formatted);
-                        onDateChange?.(formatted);
                     };
 
                     return (
                         <FormItem className={cn("w-full", className)}>
                             <FloatingDateField
-                                ref={handleRef}
+                                ref={field.ref}
                                 name={name as string}
                                 label={label}
                                 value={field.value ? new Date(field.value) : null}
@@ -96,6 +88,7 @@ const FloatingDateControllerInner = <T extends FieldValues>(
                                 toYear={toYear}
                                 disableFuture={disableFuture}
                                 forcelightmode={forcelightmode}
+                                error={!!fieldState.error as unknown as string}
                             />
                             {description && <FormDescription>{description}</FormDescription>}
                             <FormMessage className="text-xs" />
@@ -132,6 +125,7 @@ const FloatingDateControllerInner = <T extends FieldValues>(
                 toYear={toYear}
                 disableFuture={disableFuture}
                 forcelightmode={forcelightmode}
+                error={error}
             />
             {description && <p className="text-[0.8rem] text-muted-foreground">{description}</p>}
             {error && <p className="text-[0.8rem] font-medium text-destructive">{error}</p>}

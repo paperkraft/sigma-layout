@@ -1,18 +1,17 @@
 "use client";
 
-import { Check, Eye, EyeOff, Lock } from 'lucide-react';
+import { Check, Lock } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
+import { FloatingInputController } from '@/components/form-controls/floating/InputController';
+import LoaderEffect from '@/components/shared/loader-effect';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
-import { cn } from '@/lib/utils';
 import { useApi } from '@/hooks/use-api';
-import { FloatingInputController } from '@/components/form-controls/floating/InputControl';
-import LoaderEffect from '@/components/shared/loader-effect';
+import { cn } from '@/lib/utils';
 
 export default function ResetPasswordPage({ id }: { id: string }) {
   const { put, isLoading } = useApi();
@@ -22,14 +21,15 @@ export default function ResetPasswordPage({ id }: { id: string }) {
 
   // Simple Validation
   const validations = [
-    { label: "At least 8 characters", valid: password.length >= 8 },
+    { label: "At least 8 characters", valid: password.length >= 6 },
     { label: "Contains a number", valid: /\d/.test(password) },
     { label: "Contains a symbol", valid: /[!@#$%^&*]/.test(password) },
   ];
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirm) return alert("Passwords do not match");
+
+    if (password !== confirm) return toast.error("Passwords do not match");
 
     const { data: result, error } = await put(`${user_api}/ChangeForgotPassword`, {
       id: id,
@@ -44,7 +44,9 @@ export default function ResetPasswordPage({ id }: { id: string }) {
     if (result && !result.isSuccess) {
       toast.error(result.resMsg);
       return;
-    } else if (result && result.isSuccess) {
+    }
+
+    if (result && result.isSuccess) {
       toast.success("Password reset successful");
       window.location.href = "/auth/sign-in";
     }
@@ -57,16 +59,13 @@ export default function ResetPasswordPage({ id }: { id: string }) {
       heroImage="https://images.unsplash.com/photo-1651314427522-6ea58411ca20?q=80&w=2670&auto=format&fit=crop"
     >
       <div className="mb-8">
-        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-primary mb-4">
-          <Lock size={24} />
-        </div>
         <h2 className="text-2xl font-bold text-slate-900">Set new password</h2>
         <p className="text-slate-500 text-sm mt-2">
           Your new password must be different to previously used passwords.
         </p>
       </div>
 
-      <form onSubmit={handleReset} className="space-y-5">
+      <form onSubmit={handleReset} className="space-y-4">
 
         <FloatingInputController
           type='password'

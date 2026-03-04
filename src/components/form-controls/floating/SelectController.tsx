@@ -1,6 +1,6 @@
 'use client';
 
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { Control, FieldValues, Path, useFormContext } from 'react-hook-form';
 
 import { FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -55,13 +55,22 @@ const FloatingSelectControllerInner = <T extends FieldValues>(
         onValueChange,
         forcelightmode = false,
     }: HybridSelectProps<T>,
-    ref: React.Ref<HTMLButtonElement> // Radix SelectTrigger forwards a button ref
+    ref: React.Ref<HTMLButtonElement>
 ) => {
+
     const form = useFormContext<T>();
     const isRHF = !disableRHF && (!!control || !!form);
 
     // Track local selection state for standard/uncontrolled mode so the label floats correctly
     const [localValue, setLocalValue] = useState<string | undefined>(value || defaultValue);
+
+    useEffect(() => {
+        if (value) {
+            setLocalValue(value);
+        } else {
+            setLocalValue(undefined);
+        }
+    }, [value, defaultValue]);
 
     // Centralized label classes
     const getLabelClasses = (hasValue: boolean, hasError?: boolean) => cn(
@@ -84,33 +93,25 @@ const FloatingSelectControllerInner = <T extends FieldValues>(
                 control={control ?? form.control}
                 name={name as Path<T>}
                 disabled={disabled}
-                render={({ field }) => {
-                    const handleRef = (e: HTMLButtonElement | null) => {
-                        field.ref(e);
-                        if (typeof ref === 'function') {
-                            ref(e);
-                        } else if (ref) {
-                            (ref as React.RefObject<HTMLButtonElement | null>).current = e;
-                        }
-                    };
-
-                    const handleChange = (val: string) => {
-                        field.onChange(val);
-                        onValueChange?.(val);
-                    };
+                render={({ field, fieldState }) => {
 
                     return (
                         <FormItem className={cn("w-full [&_button]:w-full", className, lightModeClasses)}>
                             <Select
-                                onValueChange={handleChange}
                                 value={field.value}
                                 defaultValue={field.value ?? defaultValue}
+                                onValueChange={field.onChange}
                                 disabled={disabled}
                             >
-                                <SelectTrigger className="relative rounded-sm h-10" id={name as string} ref={handleRef}>
+                                <SelectTrigger
+                                    id={name as string}
+                                    ref={field.ref}
+                                    className="relative rounded-sm h-10 dark:bg-transparent dark:hover:bg-transparent drak:hover:border-input dark:border-gray-700 dark:focus-visible:border-primary/95"
+                                    aria-invalid={!!fieldState.error}
+                                >
                                     <Label
                                         htmlFor={name as string}
-                                        className={getLabelClasses(!!field.value)}
+                                        className={getLabelClasses(!!field.value, !!fieldState.error)}
                                     >
                                         {label}
                                     </Label>
@@ -148,14 +149,18 @@ const FloatingSelectControllerInner = <T extends FieldValues>(
     const hasValue = !!(value || localValue);
 
     return (
-        <div className={cn("w-full space-y-2", className)}>
+        <div className={cn("w-full [&_button]:w-full", className, lightModeClasses)}>
             <Select
                 onValueChange={handleStandardChange}
                 value={value || localValue}
                 defaultValue={defaultValue}
                 disabled={disabled}
             >
-                <SelectTrigger className="relative h-10" id={name as string} ref={ref}>
+                <SelectTrigger
+                    id={name as string}
+                    ref={ref}
+                    className="relative rounded-sm h-10 dark:bg-transparent dark:hover:bg-transparent drak:hover:border-input dark:border-gray-700 dark:focus-visible:border-primary/95"
+                >
                     <Label
                         htmlFor={name as string}
                         className={getLabelClasses(hasValue, !!error)}
@@ -164,9 +169,13 @@ const FloatingSelectControllerInner = <T extends FieldValues>(
                     </Label>
                     <SelectValue placeholder={placeholder || " "} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent side="bottom" position="popper" className={cn(whiteContentClasses)}>
                     {options?.map((item, i) => (
-                        <SelectItem value={String(item.value)} key={`${i}.${item.value}`}>
+                        <SelectItem
+                            value={String(item.value)}
+                            key={`${i}.${item.value}`}
+                            className={cn(forcelightmode && "focus:dark:bg-primary/10 focus:dark:text-slate-900 cursor-pointer")}
+                        >
                             {item.label}
                         </SelectItem>
                     ))}

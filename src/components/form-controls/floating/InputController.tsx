@@ -22,11 +22,14 @@ export interface HybridInputProps<T extends FieldValues = FieldValues>
     currency?: boolean;
     search?: boolean;
     forcelightmode?: boolean;
+    leftIcon?: React.ReactNode;
+    rightIcon?: React.ReactNode;
 }
 
 const formatValue = (type: string | undefined, rawValue: string) => {
     if (type === undefined) return rawValue.replace(/[^a-zA-Z\s]/g, '').trimStart();
-    if (type === 'number') return rawValue.replace(/[^0-9]/g, '').trimStart();
+    if (type === 'number') return rawValue.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+    if (type === 'tel') return rawValue.replace(/[^0-9]/g, '');
     return rawValue;
 };
 
@@ -43,12 +46,17 @@ const FloatingInputControllerInner = <T extends FieldValues>(
         onResetClick,
         className,
         forcelightmode = false,
+        search,
+        currency,
+        leftIcon,
+        rightIcon,
         ...rest
     }: HybridInputProps<T>,
     ref: React.Ref<HTMLInputElement>
 ) => {
     const form = useFormContext<T>();
     const isRHF = !disableRHF && (!!control || !!form);
+
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = useCallback(() => {
@@ -56,13 +64,20 @@ const FloatingInputControllerInner = <T extends FieldValues>(
     }, []);
 
     const resetField = useCallback(() => {
-        form.resetField(name as Path<T>);
+        if (isRHF) {
+            form.resetField(name as Path<T>);
+        }
         onResetClick?.();
-    }, []);
+    }, [form, name, isRHF, onResetClick]);
 
-    const hasPrefix = rest.currency || rest.search;
+    const hasPrefix = currency || search;
 
     const lightModeClasses = forcelightmode ? '[&_label]:dark:bg-white [&_input]:dark:bg-white [&_input]:dark:border-gray-300 [&_input]:dark:text-muted [&_input]:dark:selection:text-foreground [&_label]:dark:text-muted/80' : "";
+    const endIconBase = "size-8 absolute right-1 top-1/2 -translate-y-1/2 flex justify-center items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer rounded-sm";
+    const starIconbase = "absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none cursor-pointer";
+    const resetIconClass = cn(endIconBase, "right-1");
+    const passwordIconClass = cn(endIconBase, reset ? "right-9" : "right-1");
+    const endIconClass = cn(endIconBase, (reset && rest.value) ? "right-9" : "right-1");
 
     // ==========================================
     // MODE 1: REACT-HOOK-FORM CONTROLLED
@@ -74,56 +89,52 @@ const FloatingInputControllerInner = <T extends FieldValues>(
                 name={name as Path<T>}
                 disabled={rest.disabled}
                 rules={{ required: rest.required ? `${label} is required` : undefined }}
-                render={({ field }) => {
+                render={({ field, fieldState }) => {
+
                     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                         const formatted = formatValue(rest.type, e.target.value);
                         field.onChange(formatted);
-                        rest.onChange?.(e);
-                    };
-
-                    // Merge RHF's ref with the forwarded custom ref
-                    const handleRef = (e: HTMLInputElement | null) => {
-                        field.ref(e); // Keep RHF's focus management intact
-                        if (typeof ref === 'function') {
-                            ref(e);
-                        } else if (ref) {
-                            (ref as React.RefObject<HTMLInputElement | null>).current = e;
-                        }
                     };
 
                     return (
-                        <FormItem className={cn("w-full gap-1", className, lightModeClasses)}>
+                        <FormItem className={cn("w-full", className, lightModeClasses)}>
                             <div className="relative h-10">
-                                {rest.currency && (
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none text-sm">
-                                        ₹
-                                    </span>
-                                )}
 
-                                {rest.search && (
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
-                                        <Search size={16} />
-                                    </span>
-                                )}
+                                {currency && (<span className={cn(starIconbase, 'text-sm')}>₹</span>)}
+                                {search && (<span className={cn(starIconbase)}><Search size={16} /></span>)}
+                                {leftIcon && <span className={cn(starIconbase)}>{leftIcon}</span>}
 
                                 <Input
                                     {...rest}
                                     {...field}
-                                    ref={handleRef} // Applied merged ref here
-                                    className={cn("peer h-10", hasPrefix && "pl-8", (reset || rest.type === 'password') && "pr-8", "placeholder:text-transparent focus:placeholder:text-muted-foreground")}
-                                    placeholder={rest.placeholder || " "}
+                                    ref={field.ref}
                                     id={name as string}
-                                    type={rest.type === 'number' ? 'text' : showPassword ? "text" : rest.type ?? 'text'}
-                                    inputMode={rest.type === 'number' ? 'decimal' : 'text'}
+                                    placeholder={rest.placeholder || " "}
                                     onChange={handleChange}
+                                    type={rest.type === 'number' ? 'text' : showPassword ? "text" : rest.type ?? 'text'}
+                                    inputMode={
+                                        rest.type === 'number' ? 'decimal' :
+                                            rest.type === 'email' ? 'email' :
+                                                rest.type === 'tel' ? 'tel' :
+                                                    rest.type === 'search' ? 'search' :
+                                                        'text'
+                                    }
+                                    className={cn(
+                                        "h-10 peer placeholder:text-transparent focus:placeholder:text-muted-foreground dark:bg-transparent dark:border-gray-700 dark:focus-visible:border-primary/95",
+                                        hasPrefix && "pl-8",
+                                        (reset || rest.type === 'password') && "pr-8",
+                                    )}
+                                    aria-invalid={!!fieldState.error}
                                 />
+
                                 {label && (
                                     <Label
                                         className={cn(
-                                            "absolute text-sm text-muted-foreground duration-300 dark:bg-card pointer-events-none",
+                                            "absolute text-sm text-muted-foreground duration-300 pointer-events-none bg-card",
                                             "peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100",
                                             "peer-focus:top-1.5 peer-focus:-translate-y-4 peer-focus:scale-90 peer-focus:px-1.5",
-                                            "start-2 top-1.5 z-10 origin-left -translate-y-4 scale-90 transform bg-card px-1.5"
+                                            "start-2 top-1.5 z-10 origin-left -translate-y-4 scale-90 transform px-1.5",
+                                            fieldState.error && "text-destructive"
                                         )}
                                         htmlFor={name as string}
                                     >
@@ -134,7 +145,8 @@ const FloatingInputControllerInner = <T extends FieldValues>(
                                     <button
                                         type='button'
                                         onClick={resetField}
-                                        className="size-8 absolute right-1 top-1/2 -translate-y-1/2 flex justify-center items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                                        className={resetIconClass}
+                                        aria-label='Reset field'
                                     >
                                         <X size={16} />
                                     </button>
@@ -143,11 +155,13 @@ const FloatingInputControllerInner = <T extends FieldValues>(
                                     <button
                                         type="button"
                                         onClick={togglePasswordVisibility}
-                                        className="size-8 absolute right-1 top-1/2 -translate-y-1/2 flex justify-center items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                                        className={passwordIconClass}
+                                        aria-label='Toggle password'
                                     >
                                         {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                     </button>
                                 )}
+                                {rightIcon && <div className={cn(endIconClass)}>{rightIcon}</div>}
                             </div>
                             {description && <FormDescription>{description}</FormDescription>}
                             <FormMessage className='text-xs' />
@@ -168,36 +182,39 @@ const FloatingInputControllerInner = <T extends FieldValues>(
     };
 
     return (
-        <div className={cn("w-full space-y-2", className, lightModeClasses)}>
-            <div className="relative">
-                {rest.currency && (
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none text-sm">
-                        ₹
-                    </span>
-                )}
-
-                {rest.search && (
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
-                        <Search size={16} />
-                    </span>
-                )}
+        <div className={cn("w-full", className, lightModeClasses)}>
+            <div className="relative h-10">
+                {currency && (<span className={cn(starIconbase, 'text-sm')}>₹</span>)}
+                {search && (<span className={cn(starIconbase)}><Search size={16} /></span>)}
+                {leftIcon && <span className={cn(starIconbase)}>{leftIcon}</span>}
 
                 <Input
                     {...rest}
-                    ref={ref} // Direct assignment for uncontrolled standard mode
-                    name={name as string}
+                    ref={ref}
                     id={name as string}
-                    className={cn("peer h-10", hasPrefix && "pl-8", (reset || rest.type === 'password') && "pr-8", "placeholder:text-transparent focus:placeholder:text-muted-foreground")}
+                    name={name as string}
                     placeholder={rest.placeholder || " "}
-                    type={rest.type === 'number' ? 'text' : showPassword ? "text" : rest.type ?? 'text'}
-                    inputMode={rest.type === 'number' ? 'decimal' : 'text'}
                     onChange={handleStandardChange}
+                    type={rest.type === 'number' ? 'text' : showPassword ? "text" : rest.type ?? 'text'}
+                    inputMode={
+                        rest.type === 'number' ? 'decimal' :
+                            rest.type === 'email' ? 'email' :
+                                rest.type === 'tel' ? 'tel' :
+                                    rest.type === 'search' ? 'search' :
+                                        'text'
+                    }
+                    className={cn(
+                        "peer h-10 placeholder:text-transparent focus:placeholder:text-muted-foreground dark:bg-transparent dark:border-gray-700 dark:focus-visible:border-primary/95",
+                        hasPrefix && "pl-8",
+                        (reset || rest.type === 'password') && "pr-8"
+                    )}
+                    aria-invalid={!!error}
                 />
 
                 {label && (
                     <Label
                         className={cn(
-                            "absolute text-sm text-muted-foreground duration-300 dark:bg-card pointer-events-none",
+                            "absolute text-sm text-muted-foreground duration-300 pointer-events-none",
                             "peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100",
                             "peer-focus:top-1.5 peer-focus:-translate-y-4 peer-focus:scale-90 peer-focus:px-1.5",
                             "start-2 top-1.5 z-10 origin-left -translate-y-4 scale-90 transform bg-card px-1.5",
@@ -209,11 +226,12 @@ const FloatingInputControllerInner = <T extends FieldValues>(
                     </Label>
                 )}
 
-                {reset && (
+                {reset && rest.value && (
                     <button
                         type='button'
                         onClick={onResetClick}
-                        className="size-8 absolute right-1 top-1/2 -translate-y-1/2 flex justify-center items-center cursor-pointer text-slate-400 hover:text-slate-600 transition-colors"
+                        className={resetIconClass}
+                        aria-label='Reset field'
                     >
                         <X size={16} />
                     </button>
@@ -223,11 +241,14 @@ const FloatingInputControllerInner = <T extends FieldValues>(
                     <button
                         type="button"
                         onClick={togglePasswordVisibility}
-                        className="size-8 absolute right-1 top-1/2 -translate-y-1/2 flex justify-center items-center cursor-pointer text-slate-400 hover:text-slate-600 transition-colors"
+                        className={passwordIconClass}
+                        aria-label='Toggle password'
                     >
                         {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                 )}
+
+                {rightIcon && <div className={cn(endIconClass)}>{rightIcon}</div>}
             </div>
             {description && <p className="text-[0.8rem] text-muted-foreground">{description}</p>}
             {error && <p className="text-[0.8rem] font-medium text-destructive">{error}</p>}

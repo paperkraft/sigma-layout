@@ -169,3 +169,7 @@
 .rdp-caption_label {
   display: none;
 }
+
+.rdp-weeks > tr {
+  margin-top: 0;
+}

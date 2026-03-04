@@ -9,7 +9,7 @@ import { user_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { getEmailProviderLink } from '@/utils';
 import { useApi } from '@/hooks/use-api';
-import { FloatingInputController } from '@/components/form-controls/floating/InputControl';
+import { FloatingInputController } from '@/components/form-controls/floating/InputController';
 
 export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -52,9 +52,6 @@ export default function ForgotPasswordPage() {
       {!isSubmitted ? (
         <>
           <div className="mb-8">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-primary mb-4">
-              <Mail size={24} />
-            </div>
             <h2 className="text-2xl font-bold text-slate-900">
               Forgot password?
             </h2>
