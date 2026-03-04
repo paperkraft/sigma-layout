@@ -1,3 +1,5 @@
+'use client';
+
 import { CreditCardIcon, LogOutIcon, SettingsIcon, UserIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -6,16 +8,18 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
 import { user_api } from '@/config';
 import { useAuth } from '@/context/auth-provider';
 import { useApi } from '@/hooks/use-api';
+import { cn } from '@/lib/utils';
 
 export function UserAction() {
   const router = useRouter();
 
-  const { setUser } = useAuth();
+  const { setUser, user } = useAuth();
   const { post } = useApi();
+
+  const displayName = user?.firstName ? `${user?.firstName} ${user?.lastName}` : user?.organisationName ?? ""
 
   const RenderUserInfo = () => {
     return (
@@ -25,22 +29,20 @@ export function UserAction() {
           <AvatarFallback className="rounded-lg">SV</AvatarFallback>
         </Avatar>
         <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="truncate font-semibold text-foreground">Vishal Sannake</span>
-          <span className="truncate text-xs text-muted-foreground">
-            vishal.sannake@infraplan.co.in
-          </span>
+          <span className="truncate font-semibold text-foreground">{displayName}</span>
+          <span className="truncate text-xs text-muted-foreground">{user?.emailId ?? ""}</span>
         </div>
       </>
     );
   };
 
   const handleLogout = async () => {
-    const { data: result, error } = await post(`${user_api}/logout`);
+    const { data: result, error } = await post(`${user_api}/Logout`);
 
     if (error) {
       console.error("Logout request failed:", error);
     } else if (result && !result.isSuccess) {
-      console.error("Logout failed with status:", result.resMsg);
+      console.error("Logout failed with status:", result?.resMsg);
     }
 
     // Whether the API failed or succeeded, we clear local state and force a reload

@@ -28,7 +28,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (error || !result || !result.isSuccess) {
                 setUser(null);
             } else {
-                console.log('Session', result.result);
                 setUser(result.result as IUser);
             }
             setLoading(false);

@@ -1,6 +1,7 @@
 export interface IUser {
     id: string,
-    name: string,
+    firstName: string,
+    lastName: string,
     roleId: string,
     roleName: string,
     emailId: string,
@@ -8,6 +9,8 @@ export interface IUser {
     countryName: string,
     countryCode: string,
     referalCode: string,
+    isIndividual: boolean,
+    organisationName: string,
     gender: string,
     isInvitedUser: boolean,
     isActive: boolean,

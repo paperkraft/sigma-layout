@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 
 import ProjectCard from './components/ProjectCard';
 import QuotaItem from './components/QuotaItem';
+import { useAuth } from '@/context/auth-provider';
 
 // --- MOCK DATA ---
 const RECENT_PROJECTS = [
@@ -47,11 +48,13 @@ const ACTIVITY_FEED = [
 ];
 
 export default function Home() {
+   const { user } = useAuth();
+
    return (
       <div className="space-y-6 p-4 md:p-6">
 
          {/* 1. HEADER & ACTIONS */}
-         <PageHeader title='Home' description='Welcome back, Vishal'>
+         <PageHeader title='Home' description={`Welcome back, ${user?.firstName ?? user?.organisationName ?? ""}`}>
             <Button>
                <Plus size={16} className="mr-1" /> New Project
             </Button>
