@@ -43,7 +43,9 @@ export default function SignInPage() {
     }
 
     if (result && result.isSuccess) {
-      window.location.href = "/home";
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectPath = urlParams.get('redirect') || "/home";
+      window.location.replace(redirectPath);
     }
   }, [post]);
 

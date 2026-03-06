@@ -13,14 +13,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
 
     const PUBLIC_ROUTE_SET = useMemo(() => new Set(PUBLIC_PATHS), []);
-    // const isPublicRoute = PUBLIC_ROUTE_SET.has(pathname);
     const isPublicRoute = useMemo(() => {
-        // exact match
         if (PUBLIC_ROUTE_SET.has(pathname)) return true;
-
-        // dynamic email verification route
-        if (pathname.startsWith('/emailverification/')) return true;
-
         return false;
     }, [pathname, PUBLIC_ROUTE_SET]);
 
@@ -29,7 +23,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
         if (!user && !isPublicRoute) {
             // Unauthenticated user trying to access a private route
-            router.replace('/auth/sign-in');
+            const redirectPath = pathname;
+            router.replace(`/auth/sign-in?redirect=${encodeURIComponent(redirectPath)}`);
         } else if (user && isPublicRoute) {
             // Authenticated user trying to access a public route (e.g., login, register)
             router.replace('/home');
