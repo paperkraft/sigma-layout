@@ -1,6 +1,7 @@
 'use client';
 
-import { CreditCardIcon, LogOutIcon, SettingsIcon, UserIcon } from 'lucide-react';
+import { LogOutIcon } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -9,6 +10,7 @@ import {
   DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { user_api } from '@/config';
+import { userActions } from '@/config/user-action';
 import { useAuth } from '@/context/auth-provider';
 import { useApi } from '@/hooks/use-api';
 import { cn } from '@/lib/utils';
@@ -20,13 +22,15 @@ export function UserAction() {
   const { post } = useApi();
 
   const displayName = user?.firstName ? `${user?.firstName} ${user?.lastName}` : user?.organisationName ?? ""
+  const displayImage = user?.firstName?.toLowerCase() === 'vishal' ? "https://github.com/shadcn.png" : ''
+  const initials = user && user?.firstName?.charAt(0) + user?.lastName?.charAt(0);
 
   const RenderUserInfo = () => {
     return (
       <>
-        <Avatar className="h-8 w-8 rounded-lg">
-          <AvatarImage src="https://github.com/shadcn.png" alt="user" />
-          <AvatarFallback className="rounded-lg">SV</AvatarFallback>
+        <Avatar className="size-8 rounded-md border">
+          <AvatarImage src={displayImage} alt="user" />
+          <AvatarFallback className="rounded-md">{initials ?? "UN"}</AvatarFallback>
         </Avatar>
         <div className="grid flex-1 text-left text-sm leading-tight">
           <span className="truncate font-semibold text-foreground">{displayName}</span>
@@ -54,18 +58,15 @@ export function UserAction() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer h-8 w-8 rounded-lg border border-border">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback className="rounded-lg">SV</AvatarFallback>
+        <Avatar className="cursor-pointer size-8 rounded-md border">
+          <AvatarImage src={displayImage} />
+          <AvatarFallback className="rounded-md">{initials ?? "UN"}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
         align="end"
-        className={cn(
-          "w-56",
-          "text-sm font-medium text-muted-foreground"
-        )}
+        className={cn("w-56 text-sm font-medium text-muted-foreground")}
       >
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
@@ -76,27 +77,19 @@ export function UserAction() {
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem
-            onClick={() => router.push("/settings/profile")}
-            className="cursor-pointer"
-          >
-            <UserIcon className="mr-2 h-4 w-4" />
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => router.push("/subscription")}
-            className="cursor-pointer"
-          >
-            <CreditCardIcon className="mr-2 h-4 w-4" />
-            Billing
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
-            <SettingsIcon className="mr-2 h-4 w-4" />
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {userActions.map((menu) => (
+            <DropdownMenuItem
+              key={menu.title}
+              className='cursor-pointer'
+              asChild
+            >
+              <Link href={menu.url ? menu.url : '#'}>
+                <menu.icon className='mr-2 size-4' />
+                {menu.title}
+                <DropdownMenuShortcut>{menu.shortcut}</DropdownMenuShortcut>
+              </Link>
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />

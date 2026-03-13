@@ -33,7 +33,6 @@ export const Header = ({
   const isMounted = useMount();
 
   const handleBack = () => route.replace("/projects");
-  const handleDashboard = () => route.replace("/dashboard");
 
   if (!isMounted) return null;
 
@@ -67,12 +66,6 @@ export const Header = ({
           <>
             <div className="h-4 w-px bg-border mx-2" />
             <nav className="h-14 flex items-center gap-4 text-xs font-medium text-muted-foreground">
-              {/* <span
-                className="hover:text-foreground cursor-pointer transition-colors"
-                onClick={() => handleDashboard()}
-              >
-                Home
-              </span> */}
               <span
                 className="hover:text-foreground cursor-pointer transition-colors"
                 onClick={() => handleBack()}
