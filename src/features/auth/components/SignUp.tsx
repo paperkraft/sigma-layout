@@ -7,16 +7,16 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { FloatingInputController } from '@/components/form-controls/floating/InputController';
+import { FloatingInputController } from '@/components/form-controls/floating/input-controller';
 import LoaderEffect from '@/components/shared/loader-effect';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { user_api } from '@/config';
+import { auth_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { useApi } from '@/hooks/use-api';
 import { signupSchema } from '@/schema/auth/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CheckboxController } from '@/components/form-controls/floating/CheckboxController';
+import { CheckboxController } from '@/components/form-controls/floating/checkbox-controller';
 import { Checkbox } from '@/components/ui/checkbox';
 
 type SignupFormValues = z.infer<typeof signupSchema>;
@@ -68,7 +68,7 @@ export default function SignUpPage() {
 
     localStorage.setItem('emailId', rest.emailId);
 
-    const { data: result, error } = await post(`${user_api}/Signup`, payload);
+    const { data: result, error } = await post(`${auth_api}/Signup`, payload);
 
     if (error) {
       toast.error(error);

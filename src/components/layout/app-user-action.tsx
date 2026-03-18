@@ -9,7 +9,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { user_api } from '@/config';
+import { auth_api } from '@/config';
 import { userActions } from '@/config/user-action';
 import { useAuth } from '@/context/auth-provider';
 import { useApi } from '@/hooks/use-api';
@@ -41,7 +41,7 @@ export function UserAction() {
   };
 
   const handleLogout = async () => {
-    const { data: result, error } = await post(`${user_api}/Logout`);
+    const { data: result, error } = await post(`${auth_api}/Logout`);
 
     if (error) {
       console.error("Logout request failed:", error);

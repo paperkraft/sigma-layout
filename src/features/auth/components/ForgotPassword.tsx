@@ -5,11 +5,11 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { user_api } from '@/config';
+import { auth_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { getEmailProviderLink } from '@/utils';
 import { useApi } from '@/hooks/use-api';
-import { FloatingInputController } from '@/components/form-controls/floating/InputController';
+import { FloatingInputController } from '@/components/form-controls/floating/input-controller';
 
 export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { data: result, error } = await post(`${user_api}/ForgotPassword`, {
+    const { data: result, error } = await post(`${auth_api}/ForgotPassword`, {
       emailId: email
     });
 

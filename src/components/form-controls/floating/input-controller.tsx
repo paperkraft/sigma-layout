@@ -8,6 +8,7 @@ import { FormDescription, FormField, FormItem, FormMessage } from '@/components/
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { ResetButton } from './reset-button';
 
 export interface HybridInputProps<T extends FieldValues = FieldValues>
     extends Omit<InputHTMLAttributes<HTMLInputElement>, 'name'> {
@@ -120,7 +121,7 @@ const FloatingInputControllerInner = <T extends FieldValues>(
                                                         'text'
                                     }
                                     className={cn(
-                                        "h-10 peer placeholder:text-transparent focus:placeholder:text-muted-foreground dark:bg-transparent dark:border-gray-700 dark:focus-visible:border-primary/95",
+                                        "h-10 rounded-sm peer placeholder:text-transparent focus:placeholder:text-muted-foreground dark:bg-transparent dark:border-gray-700 dark:focus-visible:border-primary/95",
                                         hasPrefix && "pl-8",
                                         (reset || rest.type === 'password') && "pr-8",
                                     )}
@@ -141,16 +142,7 @@ const FloatingInputControllerInner = <T extends FieldValues>(
                                         {label}
                                     </Label>
                                 )}
-                                {reset && field.value && (
-                                    <button
-                                        type='button'
-                                        onClick={resetField}
-                                        className={resetIconClass}
-                                        aria-label='Reset field'
-                                    >
-                                        <X size={16} />
-                                    </button>
-                                )}
+                                {reset && field.value && <ResetButton reset={(resetField)} />}
                                 {rest.type === 'password' && (
                                     <button
                                         type="button"
@@ -204,7 +196,7 @@ const FloatingInputControllerInner = <T extends FieldValues>(
                                         'text'
                     }
                     className={cn(
-                        "peer h-10 placeholder:text-transparent focus:placeholder:text-muted-foreground dark:bg-transparent dark:border-gray-700 dark:focus-visible:border-primary/95",
+                        "h-10 rounded-sm peer placeholder:text-transparent focus:placeholder:text-muted-foreground dark:bg-transparent dark:border-gray-700 dark:focus-visible:border-primary/95",
                         hasPrefix && "pl-8",
                         (reset || rest.type === 'password') && "pr-8"
                     )}
@@ -226,16 +218,7 @@ const FloatingInputControllerInner = <T extends FieldValues>(
                     </Label>
                 )}
 
-                {reset && rest.value && (
-                    <button
-                        type='button'
-                        onClick={onResetClick}
-                        className={resetIconClass}
-                        aria-label='Reset field'
-                    >
-                        <X size={16} />
-                    </button>
-                )}
+                {reset && rest.value && <ResetButton reset={(resetField)} />}
 
                 {rest.type === 'password' && (
                     <button

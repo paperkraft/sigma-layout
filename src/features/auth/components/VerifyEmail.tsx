@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { user_api } from '@/config';
+import { auth_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { useApi } from '@/hooks/use-api';
 import LoaderEffect from '@/components/shared/loader-effect';
@@ -24,7 +24,7 @@ export default function EmailVerification({ accesskey, token }: VerifyPageProps)
     const handleVerify = async () => {
         setError("");
 
-        const { data: result, error: apiError } = await post(`${user_api}/ConfirmMail`, {
+        const { data: result, error: apiError } = await post(`${auth_api}/ConfirmMail`, {
             verificationKey: accesskey,
             userId: token
         });

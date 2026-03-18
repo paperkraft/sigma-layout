@@ -5,10 +5,10 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
-import { FloatingInputController } from '@/components/form-controls/floating/InputController';
+import { FloatingInputController } from '@/components/form-controls/floating/input-controller';
 import LoaderEffect from '@/components/shared/loader-effect';
 import { Button } from '@/components/ui/button';
-import { user_api } from '@/config';
+import { auth_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { useApi } from '@/hooks/use-api';
 import { cn } from '@/lib/utils';
@@ -31,7 +31,7 @@ export default function ResetPasswordPage({ id }: { id: string }) {
 
     if (password !== confirm) return toast.error("Passwords do not match");
 
-    const { data: result, error } = await put(`${user_api}/ChangeForgotPassword`, {
+    const { data: result, error } = await put(`${auth_api}/ChangeForgotPassword`, {
       id: id,
       newPassword: password
     });

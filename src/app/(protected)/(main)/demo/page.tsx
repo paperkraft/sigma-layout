@@ -4,16 +4,16 @@ import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 
-import { CheckboxController } from '@/components/form-controls/floating/CheckboxController';
-import { FloatingDateController } from '@/components/form-controls/floating/DatePickerController';
-import { FloatingInputController } from '@/components/form-controls/floating/InputController';
-import { RadioButtonController } from '@/components/form-controls/floating/RadioButtonController';
-import { FloatingSelectController } from '@/components/form-controls/floating/SelectController';
+import { CheckboxController } from '@/components/form-controls/floating/checkbox-controller';
+import { FloatingDateController } from '@/components/form-controls/floating/datepicker-controller';
+import { FloatingInputController } from '@/components/form-controls/floating/input-controller';
+import { RadioButtonController } from '@/components/form-controls/floating/radiobutton-controller';
+import { FloatingSelectController } from '@/components/form-controls/floating/select-controller';
 import { PageHeader } from '@/components/shared/page-header';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FloatingTextareaController } from '@/components/form-controls/floating/TextareaController';
+import { FloatingTextareaController } from '@/components/form-controls/floating/textarea-controller';
 
 const sampleSchema = z.object({
     title: z.string().min(1, "Select title"),
