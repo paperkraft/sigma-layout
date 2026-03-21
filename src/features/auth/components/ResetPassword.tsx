@@ -1,17 +1,18 @@
 "use client";
 
-import { Check, Lock } from 'lucide-react';
+import { Check } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
-import { FloatingInputController } from '@/components/form-controls/floating/InputController';
+import { FloatingInputController } from '@/components/form-controls/floating/input-controller';
 import LoaderEffect from '@/components/shared/loader-effect';
 import { Button } from '@/components/ui/button';
-import { user_api } from '@/config';
+import { auth_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { useApi } from '@/hooks/use-api';
 import { cn } from '@/lib/utils';
+import { AuthHeader } from './AuthHeader';
 
 export default function ResetPasswordPage({ id }: { id: string }) {
   const { put, isLoading } = useApi();
@@ -21,7 +22,7 @@ export default function ResetPasswordPage({ id }: { id: string }) {
 
   // Simple Validation
   const validations = [
-    { label: "At least 8 characters", valid: password.length >= 6 },
+    { label: "At least 6 characters", valid: password.length >= 6 },
     { label: "Contains a number", valid: /\d/.test(password) },
     { label: "Contains a symbol", valid: /[!@#$%^&*]/.test(password) },
   ];
@@ -31,7 +32,7 @@ export default function ResetPasswordPage({ id }: { id: string }) {
 
     if (password !== confirm) return toast.error("Passwords do not match");
 
-    const { data: result, error } = await put(`${user_api}/ChangeForgotPassword`, {
+    const { data: result, error } = await put(`${auth_api}/changeForgotPassword`, {
       id: id,
       newPassword: password
     });
@@ -48,7 +49,7 @@ export default function ResetPasswordPage({ id }: { id: string }) {
 
     if (result && result.isSuccess) {
       toast.success("Password reset successful");
-      window.location.href = "/auth/sign-in";
+      window.location.replace("/auth/sign-in");
     }
   };
 
@@ -58,12 +59,7 @@ export default function ResetPasswordPage({ id }: { id: string }) {
       heroSubtitle="Choose a strong password to protect your simulation data and engineering projects."
       heroImage="https://images.unsplash.com/photo-1651314427522-6ea58411ca20?q=80&w=2670&auto=format&fit=crop"
     >
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-slate-900">Set new password</h2>
-        <p className="text-slate-500 text-sm mt-2">
-          Your new password must be different to previously used passwords.
-        </p>
-      </div>
+      <AuthHeader title='Set new password' description='Your new password must be different to previously used passwords.' />
 
       <form onSubmit={handleReset} className="space-y-4">
 
@@ -124,6 +120,7 @@ export default function ResetPasswordPage({ id }: { id: string }) {
         <Link
           href="/auth/sign-in"
           className="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+          prefetch={false}
         >
           ← Back to Login
         </Link>

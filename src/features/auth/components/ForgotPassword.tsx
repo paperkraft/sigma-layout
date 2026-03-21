@@ -5,11 +5,12 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { user_api } from '@/config';
+import { auth_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { getEmailProviderLink } from '@/utils';
 import { useApi } from '@/hooks/use-api';
-import { FloatingInputController } from '@/components/form-controls/floating/InputController';
+import { FloatingInputController } from '@/components/form-controls/floating/input-controller';
+import { AuthHeader } from './AuthHeader';
 
 export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -19,7 +20,7 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { data: result, error } = await post(`${user_api}/ForgotPassword`, {
+    const { data: result, error } = await post(`${auth_api}/forgotPassword`, {
       emailId: email
     });
 
@@ -51,15 +52,7 @@ export default function ForgotPasswordPage() {
     >
       {!isSubmitted ? (
         <>
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-slate-900">
-              Forgot password?
-            </h2>
-            <p className="text-slate-500 text-sm mt-2">
-              Enter the email address associated with your account and we'll
-              send you a link to reset your password.
-            </p>
-          </div>
+          <AuthHeader title='Forgot password?' description={`Enter the email address associated with your account and we'll send you a link to reset your password`} />
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <FloatingInputController

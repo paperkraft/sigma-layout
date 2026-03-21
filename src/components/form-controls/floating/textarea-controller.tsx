@@ -8,6 +8,7 @@ import { FormDescription, FormField, FormItem, FormMessage } from '@/components/
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { ResetButton } from './reset-button';
 
 export interface HybridTextareaProps<T extends FieldValues = FieldValues>
     extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'name'> {
@@ -94,16 +95,7 @@ const FloatingTextareaControllerInner = <T extends FieldValues>(
                                         {label}
                                     </Label>
                                 )}
-                                {reset && field.value && (
-                                    <button
-                                        type='button'
-                                        onClick={resetField}
-                                        className={resetIconClass}
-                                        aria-label='Reset field'
-                                    >
-                                        <X size={16} />
-                                    </button>
-                                )}
+                                {reset && field.value && <ResetButton reset={(resetField)} />}
                             </div>
                             {description && <FormDescription>{description}</FormDescription>}
                             <FormMessage className='text-xs' />
@@ -155,15 +147,7 @@ const FloatingTextareaControllerInner = <T extends FieldValues>(
                     </Label>
                 )}
 
-                {reset && rest.value && (
-                    <button
-                        onClick={onResetClick}
-                        className={resetIconClass}
-                        aria-label='Reset field'
-                    >
-                        <X size={16} />
-                    </button>
-                )}
+                {reset && rest.value && <ResetButton reset={(resetField)} />}
             </div>
             {description && <p className="text-[0.8rem] text-muted-foreground">{description}</p>}
             {error && <p className="text-[0.8rem] font-medium text-destructive">{error}</p>}

@@ -6,11 +6,13 @@ import React, { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { user_api } from '@/config';
+import { auth_api } from '@/config';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
+import { useApi } from '@/hooks/use-api';
 import { cn } from '@/lib/utils';
 import { getEmailProviderLink } from '@/utils';
-import { useApi } from '@/hooks/use-api';
+
+import { AuthHeader } from './AuthHeader';
 
 export default function EmailSent() {
   const [resendStatus, setResendStatus] = useState<"idle" | "sent">("idle");
@@ -20,9 +22,9 @@ export default function EmailSent() {
   const emailProvider = getEmailProviderLink(email);
 
   const handleResend = useCallback(async () => {
-    setResendStatus("sent");
 
-    const { data: result, error } = await post(`${user_api}/ResendConfirmation`, { emailId: email });
+    if (!email) return;
+    const { data: result, error } = await post(`${auth_api}/ResendConfirmation`, { emailId: email });
 
     if (error) {
       toast.error(error);
@@ -36,7 +38,7 @@ export default function EmailSent() {
       return;
     } else if (result && result.isSuccess) {
       toast.success("Email sent");
-      setResendStatus("idle");
+      setResendStatus("sent");
     }
   }, [post, email]);
 
@@ -59,13 +61,7 @@ export default function EmailSent() {
         </div>
 
         {/* Text Content */}
-        <h2 className="text-2xl font-bold text-slate-900 mb-3">
-          Check your inbox
-        </h2>
-        <p className="text-slate-500 text-sm leading-relaxed mb-8">
-          We have sent a verification link to <br />
-          <span className="font-bold text-slate-900 text-base">{email}</span>
-        </p>
+        <AuthHeader title='Check your inbox' description={`We have sent a verification link to ${email}`} />
 
         {/* Main Actions */}
         <div className="space-y-4">

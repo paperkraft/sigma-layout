@@ -2,7 +2,7 @@
 
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 
-import { user_api } from '@/config';
+import { auth_api } from '@/config';
 import { useMount } from '@/hooks/use-mount';
 import { useApi } from '@/hooks/use-api';
 import { IUser } from '@/interface/session';
@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         async function checkSession() {
-            const { data: result, error } = await post(`${user_api}/Session`);
+            const { data: result, error } = await post(`${auth_api}/Session`);
 
             if (error || !result || !result.isSuccess) {
                 setUser(null);

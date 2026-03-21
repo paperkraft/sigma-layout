@@ -7,7 +7,7 @@ import { Control, FieldValues, Path, useFormContext } from 'react-hook-form';
 import { FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { cn } from '@/lib/utils';
 
-import { FloatingDateField } from './FloatingDateField';
+import { FloatingDateField } from './date-field';
 
 export interface HybridDateControllerProps<T extends FieldValues = FieldValues> {
     name: Path<T> | string;

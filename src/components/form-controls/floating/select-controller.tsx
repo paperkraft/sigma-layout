@@ -106,7 +106,7 @@ const FloatingSelectControllerInner = <T extends FieldValues>(
                                 <SelectTrigger
                                     id={name as string}
                                     ref={field.ref}
-                                    className="relative rounded-sm h-10 dark:bg-transparent dark:hover:bg-transparent drak:hover:border-input dark:border-gray-700 dark:focus-visible:border-primary/95"
+                                    className="relative rounded-sm data-[size=default]:h-10 dark:bg-transparent dark:hover:bg-transparent dark:hover:border-input dark:border-gray-700 dark:focus-visible:border-primary/95"
                                     aria-invalid={!!fieldState.error}
                                 >
                                     <Label
@@ -159,7 +159,7 @@ const FloatingSelectControllerInner = <T extends FieldValues>(
                 <SelectTrigger
                     id={name as string}
                     ref={ref}
-                    className="relative rounded-sm h-10 dark:bg-transparent dark:hover:bg-transparent drak:hover:border-input dark:border-gray-700 dark:focus-visible:border-primary/95"
+                    className="relative rounded-sm data-[size=default]:h-10 dark:bg-transparent dark:hover:bg-transparent drak:hover:border-input dark:border-gray-700 dark:focus-visible:border-primary/95"
                 >
                     <Label
                         htmlFor={name as string}

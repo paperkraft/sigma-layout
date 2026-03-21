@@ -1,9 +1,8 @@
 "use client";
 
-import { Metadata } from 'next';
 import { PageHeader } from '@/components/shared/page-header';
 import { Button } from '@/components/ui/button';
-import { Check, Plus, HelpCircle, Minus, ShoppingCart } from 'lucide-react';
+import { Check, Plus, Minus, ShoppingCart } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
 const plans = [
@@ -141,7 +140,7 @@ export default function SubscriptionPage() {
       />
 
       {/* Pricing Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
         {plans.map((plan) => {
           const isSelected = selectedPlanId === plan.id;
           return (
@@ -340,7 +339,7 @@ export default function SubscriptionPage() {
 
       {/* Floating Cart Footer */}
       {(selectedPlanId || Object.keys(addonCart).length > 0) && (
-        <div className="fixed bottom-0 md:bottom-6 left-0 md:left-auto right-0 md:right-6 md:w-120 bg-foreground text-background shadow-2xl md:rounded-2xl z-50 animate-in slide-in-from-bottom-8 fade-in border border-border/20">
+        <div className="fixed top-0 md:top-16 left-0 md:left-auto right-0 md:right-6 md:w-120 bg-foreground text-background shadow-xl md:rounded-2xl z-50 animate-in slide-in-from-bottom-8 fade-in border border-border/20">
           <div className="p-4 md:p-5 flex flex-col md:flex-row items-center justify-between gap-4">
 
             <div className="flex items-center gap-3 w-full md:w-auto text-left">

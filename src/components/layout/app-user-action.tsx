@@ -2,22 +2,19 @@
 
 import { LogOutIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { user_api } from '@/config';
+import { auth_api } from '@/config';
 import { userActions } from '@/config/user-action';
 import { useAuth } from '@/context/auth-provider';
 import { useApi } from '@/hooks/use-api';
 import { cn } from '@/lib/utils';
 
 export function UserAction() {
-  const router = useRouter();
-
   const { setUser, user } = useAuth();
   const { post } = useApi();
 
@@ -28,7 +25,7 @@ export function UserAction() {
   const RenderUserInfo = () => {
     return (
       <>
-        <Avatar className="size-8 rounded-md border">
+        <Avatar className="size-8 rounded-md">
           <AvatarImage src={displayImage} alt="user" />
           <AvatarFallback className="rounded-md">{initials ?? "UN"}</AvatarFallback>
         </Avatar>
@@ -41,16 +38,13 @@ export function UserAction() {
   };
 
   const handleLogout = async () => {
-    const { data: result, error } = await post(`${user_api}/Logout`);
+    const { data: result, error } = await post(`${auth_api}/logout`);
 
     if (error) {
       console.error("Logout request failed:", error);
     } else if (result && !result.isSuccess) {
       console.error("Logout failed with status:", result?.resMsg);
     }
-
-    // Whether the API failed or succeeded, we clear local state and force a reload
-    // to ensure the application resets correctly.
     setUser(null);
     window.location.href = "/auth/sign-in";
   };
@@ -99,7 +93,7 @@ export function UserAction() {
             className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
             onClick={handleLogout}
           >
-            <LogOutIcon className="mr-2 h-4 w-4 text-destructive" />
+            <LogOutIcon className="mr-2 size-4 text-destructive" />
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>

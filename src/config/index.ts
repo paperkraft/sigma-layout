@@ -1,5 +1,5 @@
-export const base_url = 'https://staging.infraplan.co.in:5056'
-export const user_api = `${base_url}/api/User`
+export const base_url = 'https://api.infraplan.co.in'
+export const auth_api = `${base_url}/auth`
 
 export const PUBLIC_PATHS = [
     '/auth/sign-in',
