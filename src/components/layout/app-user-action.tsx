@@ -38,7 +38,7 @@ export function UserAction() {
   };
 
   const handleLogout = async () => {
-    const { data: result, error } = await post(`${auth_api}/logout`);
+    const { data: result, error } = await post(`${auth_api}/Logout`);
 
     if (error) {
       console.error("Logout request failed:", error);

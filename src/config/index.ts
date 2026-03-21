@@ -8,5 +8,5 @@ export const PUBLIC_PATHS = [
     '/auth/reset-password',
     '/auth/email-sent',
     '/auth/verify-email',
-    '/auth/verified-success',
+    '/auth/verified',
 ];
